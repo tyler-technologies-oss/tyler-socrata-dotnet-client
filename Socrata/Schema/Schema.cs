@@ -19,7 +19,6 @@ namespace Socrata
             var jsonString = JsonConvert.SerializeObject(
                 d, Formatting.Indented,
                 new JsonConverter[] {new StringEnumConverter()});
-            
             System.Diagnostics.Debug.WriteLine(jsonString);
             return d;
         }
