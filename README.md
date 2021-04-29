@@ -18,18 +18,6 @@ Socrata Resources
 ```c#
 // Get a resource by its ID*
 Resource dataset = client.GetResource("abcd-1234");
-
-// Alternatively, create a new resource on the domain
-SchemaBuilder schemaBuilder = new SchemaBuilder();
-schemaBuilder
-  .AddColumn(new Column("First Column", SocrataDataType.NUMBER))
-  .AddColumn(new Column("Second Column", SocrataDataType.TEXT, "optional description"));
-Schema schema = schemaBuilder.Build();
-
-Resource NewDataset = client.CreateResourceBuilder("New Dataset Name")
-                              .SetSchema(schema)
-                              .SetDescription("Dataset Description")
-                              .Build();
 ```
 ***Note***
 [Dataset IDs](https://support.socrata.com/hc/en-us/articles/202950258-What-is-a-Dataset-UID-or-a-Dataset-4x4-)
@@ -81,16 +69,7 @@ Direct Row Manipulation
 // Insert Functionality
 List<Dictionary<string, string>> newRecords = new List<Dictionary<string, string>> 
 {
-  new Dictionary<string, string>
-  {
-    {"api_field", "value"},
-    {"other_field", "othervalue"}
-  },
-  new Dictionary<string, string>
-  {
-    {"api_field", "nextvalue"},
-    {"other_field", "test"}
-  },
+  new Dictionary<string, string>{{"api_field", "nextvalue"},{"other_field", "test"}}
 };
 Result result = dataset.Rows().Insert(newRecords);
 
@@ -104,16 +83,7 @@ Assert.AreEqual(newRecords.Length, result.Inserted);
 // Update Functionality
 List<Dictionary<string, object>> recordsToUpdate = new List<Dictionary<string, object>> 
 {
-  new Dictionary<string, object>
-  {
-    {"row_identifier", 1},
-    {"column_that_changed", "newvalue"}
-  },
-  new Dictionary<string, object>
-  {
-    {"row_identifier", 2},
-    {"other_column_that_changed", "newvalue"}
-  },
+  new Dictionary<string, object>{{"row_identifier", 1},{"column_that_changed", "newvalue"}}
 };
 Result result = dataset.Rows().Update(recordsToUpdate);
 
@@ -127,14 +97,7 @@ Assert.AreEqual(recordsToUpdate.Length, result.Updated);
 // Delete Functionality
 List<Dictionary<string, string>> recordsToDelete = new List<Dictionary<string, string>> 
 {
-  new Dictionary<string, string>
-  {
-    {"row_identifier", "ID-1"}
-  },
-  new Dictionary<string, string>
-  {
-    {"row_identifier", "ID-2"}
-  },
+  new Dictionary<string, string>{{"row_identifier", "ID-1"}}
 };
 Result result = dataset.Rows().Delete(recordsToDelete);
 
@@ -192,13 +155,6 @@ Delete: A delete of the contents based off the row identifier
 
 ### Handling error rows
 ```c#
-  Resource resource = socrataClient.GetResource("tzmz-8bnb");
-  Revision revision = resource.OpenRevision(RevisionType.REPLACE);
-  Source source = revision.CreateStreamingSource("test-csv.csv");
-  ByteSink sink = source.StreamingSource(ContentType.CSV);
-  //Open the stream and read the file.
-  sink.FileSink(@"C:\Path\To\MyFile.csv");
-  source.AwaitCompletion(status => Console.WriteLine(status));
   if(source.HasErrorRows())
   {
     string errorFile = "C:\Path\To\ErrorRows.csv";
@@ -207,8 +163,6 @@ Delete: A delete of the contents based off the row identifier
     // Throw an exception
     throw new Exception($"{numberOfErrors} Error(s) were found in the upload");
   }
-  revision.Apply();
-  revision.AwaitCompletion(status => Console.WriteLine(status));
 ```
 
 ### Dataset Metadata Only Revisions
@@ -279,82 +233,6 @@ Resource dataset = client.GetResource("abcd-1234");
 string resourceName = dataset.metadata.Name;
 ```
 
-### Updating Dataset Schemas
-```c#
-// From a known schema, e.g.:
-// Get Business License Resource
-Resource dataset = client.GetResource("abcd-1234");
-try {
-  dataset.AssertSchemaMatch(new BusinessLicenseInfoSchema());
-} catch {
-  // Schemas are mismatched
-  SchemaDelta delta = dataset.SchemaDiff(new BusinessLicenseInfoSchema());
-  delta.PrintDelta()
-  /*
-  1:
-  Column Not In Dataset: LicenseNumber
-  Operation: Add Column
-  2:
-  Column Not In Schema: BusinessLocation
-  Operation: No Operation
-  3:
-  Column Data Type Mismatch: DoingBusinessAs
-  Wanted: Number
-  Got: Text
-  Operation: No Operation
-  */
-  delta.Apply();
-  /*
-  By default the operation will only add columns
-  that are missing
-  */
-}
-
-// Create a working copy to stage changes
-WorkingCopy workingCopy = dataset.CreateWorkingCopy();
-SchemaBuilder schemaBuilder = workingCopy.GetSchema();
-
-Schema schema = schemaBuilder
-  .AddColumn(new Column("NewColumn", SocrataDataType.TEXT))
-  .RemoveColumnByName("RemoveThisColumn")
-  .Build();
-
-// This will throw an error if any of the column
-// updates is unsuccessful
-workingCopy
-  .SetSchema(schema)
-  .Apply();
-
-Assert.IsFalse(result.IsError);
-
-// If you want to keep editing your working copy, make sure to get a new copy of your schema 
-// after you `Apply` your changes 
-SchemaBuilder updatedSchemaBuilder = updatedWorkingCopy.GetSchema();
-
-// You can also update an existing column in a schema
-Column newColumn = updatedSchemaBuilder
-  .FindColumnByName("NewColumn")
-  .UpdateName("NewNewColumnName")
-  .UpdateType(SocrataDataType.NUMBER)
-
-// You can build your schema
-Schema updatedSchema = updatedSchemaBuilder
-  .Build();
-
-// Then apply the schema to your working copy and publish
-Resource updateDataset = updatedWorkingCopy
-  .Apply(updatedSchema)
-  .Publish();
-
-
-Assert.IsFalse(result.IsError);
-
-
-// If you don't know the DIFF you can calculate it
-SchemaBuilder schemaBuilder = updatedWorkingCopy.GetSchema();
-List<Column> currentSchema = schemaBuilder.GetColumns();
-```
-
 Running Tests
 ----
 
@@ -363,13 +241,6 @@ dotnet test
 ```
 
 Or a specific test:
-
 ```bash
 dotnet test --filter {testname}
 ```
-
-Building a New Version
-----
-Update with new version:
-- [Socrata.csproj]("Socrata/Socrata.csproj")
-- [Build YAML](".github/workflows/dotnet-core.yml")
