@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5</TargetFramework>
+
+    <IsPackable>true</IsPackable>
+	
+	<PackageId>Socrata</PackageId>
+
+    <Version>0.0.1</Version>
+
+    <Description>Socrata .NET SDK</Description>
+
+    <RepositoryUrl>https://github.com/tyler-technologies/tyler-socrata-net-sdk</RepositoryUrl>
+
+    <RepositoryType>Github</RepositoryType>
+
+    <PackageTags>Socrata</PackageTags>
+
+    <PackageProjectUrl>https://github.com/tyler-technologies/tyler-socrata-net-sdk</PackageProjectUrl>
+
+    <PackageIcon>socrata-icon.png</PackageIcon>
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\socrata-icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+</Project>

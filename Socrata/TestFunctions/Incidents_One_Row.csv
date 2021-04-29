@@ -1,0 +1,2 @@
+incident_id,incident_number,incident_type,agency,call_date_time,call_source,area_police_ori,area_fire_fdid,area_ems_ori,area_district,area_beat,area_quadrant,area_station,call_priority,type_description,agency_name,cancelled,report_required,sealed,call_id,created_date_time,updated_date_time,common_name,block,house_number,street_name,city,state,zip,qualifier,address_1_line,latitude,longitude,location,shp1,shp2,shp3,shp4,shp5
+1,1,First,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
