@@ -1,5 +1,5 @@
 # tyler-socrata-net-sdk
-[![Build](https://github.com/tyler-technologies/tyler-socrata-net-sdk/workflows/build/badge.svg)](https://github.com/tyler-technologies/tyler-socrata-net-sdk/actions?query=workflow%3Abuild)
+[![build](https://github.com/tyler-technologies-oss/tyler-socrata-dotnet-client/actions/workflows/dotnet-core.yml/badge.svg)](https://github.com/tyler-technologies-oss/tyler-socrata-dotnet-client/actions/workflows/dotnet-core.yml)
 
 .NET Socrata SDK for reading and writing to Socrata APIs
 
