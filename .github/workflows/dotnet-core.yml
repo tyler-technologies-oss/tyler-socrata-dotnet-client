@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set_proj_version.outputs.PKG_VERSION }}
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -22,8 +25,19 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Package
-      run: dotnet pack --no-restore --output ./packaging
-    
+      run: dotnet pack --no-restore -o packaging --configuration Release
+    - name: Publish artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: nupkg
+        path: packaging
+    - name: Get version
+      id: set_proj_version
+      shell: pwsh
+      run: |
+        [xml]$nuspec = Get-Content Socrata\Socrata.csproj
+        $version=$nuspec.project.propertygroup.version
+        Write-Output "::set-output name=PKG_VERSION::$version"
     env:
       SODA_USERNAME: "${{ secrets.SODA_USERNAME }}"
       SODA_PASSWORD: "${{ secrets.SODA_PASSWORD }}"

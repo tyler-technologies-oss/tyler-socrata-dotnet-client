@@ -5,19 +5,19 @@
 
     <IsPackable>true</IsPackable>
 	
-	<PackageId>Socrata</PackageId>
+	  <PackageId>Socrata</PackageId>
 
-    <Version>0.0.1</Version>
+    <Version>0.0.3-beta</Version>
 
-    <Description>Socrata .NET SDK</Description>
+    <Description>Socrata .NET Client</Description>
 
-    <RepositoryUrl>https://github.com/tyler-technologies/tyler-socrata-net-sdk</RepositoryUrl>
+    <RepositoryUrl>https://github.com/tyler-technologies-oss/tyler-socrata-dotnet-client</RepositoryUrl>
 
     <RepositoryType>Github</RepositoryType>
 
     <PackageTags>Socrata</PackageTags>
 
-    <PackageProjectUrl>https://github.com/tyler-technologies/tyler-socrata-net-sdk</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/tyler-technologies-oss/tyler-socrata-dotnet-client</PackageProjectUrl>
 
     <PackageIcon>socrata-icon.png</PackageIcon>
   </PropertyGroup>
