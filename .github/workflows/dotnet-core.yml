@@ -41,3 +41,30 @@ jobs:
     env:
       SODA_USERNAME: "${{ secrets.SODA_USERNAME }}"
       SODA_PASSWORD: "${{ secrets.SODA_PASSWORD }}"
+
+  deploy:
+    needs: build
+    environment:
+      name: production
+      url: https://www.nuget.org/packages/socrata.dotnet/
+    name: Sign and publish
+    runs-on: windows-latest
+    steps:
+      - name: Download Package artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: nupkg
+      
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.5
+        with:
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          nuget-version: latest
+      
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.100
+
+      - name: Push to NuGet
+        run: dotnet nuget push **/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
