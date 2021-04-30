@@ -35,7 +35,7 @@ namespace Socrata.DSMAPI
             viewSource.Add("type", SourceType.VIEW.Value);
             viewSource.Add("fourfour", "none");
             SourceResponse result = CreateSource(viewSource);
-            this.Source = new Source(this.HttpClient, result.Resource, result.Links);
+            this.Source = new Source(this.HttpClient, result.Resource, result.Links, this.Metadata.FourFour);
             return this.Source;
         }
 
@@ -45,7 +45,7 @@ namespace Socrata.DSMAPI
             uploadSource.Add("type", SourceType.UPLOAD.Value);
             uploadSource.Add("filename", filename);
             SourceResponse result = CreateSource(uploadSource);
-            this.Source = new Source(this.HttpClient, result.Resource, result.Links);
+            this.Source = new Source(this.HttpClient, result.Resource, result.Links, this.Metadata.FourFour);
             return this.Source;
         }
 
@@ -55,7 +55,7 @@ namespace Socrata.DSMAPI
             uploadSource.Add("type", SourceType.UPLOAD.Value);
             uploadSource.Add("filename", sourcename);
             SourceResponse result = CreateSource(uploadSource);
-            this.Source = new Source(this.HttpClient, result.Resource, result.Links);
+            this.Source = new Source(this.HttpClient, result.Resource, result.Links, this.Metadata.FourFour);
             return this.Source;
         }
 
@@ -66,7 +66,7 @@ namespace Socrata.DSMAPI
             viewSource.Add("filename", filename);
             viewSource.Add("url", url);
             SourceResponse result = CreateSource(viewSource);
-            this.Source = new Source(this.HttpClient, result.Resource, result.Links);
+            this.Source = new Source(this.HttpClient, result.Resource, result.Links, this.Metadata.FourFour);
             return this.Source;
         }
 

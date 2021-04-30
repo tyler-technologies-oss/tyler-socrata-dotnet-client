@@ -34,9 +34,15 @@ namespace Socrata
         public bool ValidateConnection() => httpClient.Get("/api/users/current.json").IsSuccessStatusCode;
 
         /// <summary>
-        /// Create a new resource on the domain.
+        /// Create a new resource on the domain via SODA.
         /// </summary>
         public SodaResourceBuilder CreateSodaResourceBuilder(string name) => new SodaResourceBuilder(name, httpClient);
+
+        /// <summary>
+        /// Create a new resource on the domain via DSMAPI.
+        /// </summary>
+        public DsmapiResourceBuilder CreateDsmapiResourceBuilder(string name) => new DsmapiResourceBuilder(name, httpClient);
+
 
         /// <summary>
         /// List all resources on the domain.

@@ -27,25 +27,25 @@ namespace Socrata.DSMAPI
         /// Updated At
         /// </summary>
         [DataMember(Name = "updated_at")]
-        public string UpdatedAt { get; }
+        public string UpdatedAt { get; internal set; }
 
         /// <summary>
         /// Revision Sequence
         /// </summary>
         [DataMember(Name = "revision_seq")]
-        public int RevisionSeq { get; }
+        public int RevisionSeq { get; internal set; }
 
         /// <summary>
         /// metadata
         /// </summary>
         [DataMember(Name = "metadata")]
-        public RevisionMetadata Metadata { get; set; }
+        public RevisionMetadata Metadata { get; internal set; }
 
         /// <summary>
         /// id
         /// </summary>
         [DataMember(Name = "id")]
-        public int Id { get; }
+        public int Id { get; internal set; }
 
         /// <summary>
         /// href
@@ -57,7 +57,7 @@ namespace Socrata.DSMAPI
         /// fourfour
         /// </summary>
         [DataMember(Name = "fourfour")]
-        public string FourFour { get; }
+        public string FourFour { get; internal set; }
 
         /// <summary>
         /// domain_id
@@ -75,25 +75,25 @@ namespace Socrata.DSMAPI
         /// created_by: user object for the person who created the revision
         /// </summary>
         [DataMember(Name = "created_by")]
-        public Dictionary<string, string> CreatedBy { get; }
+        public Dictionary<string, string> CreatedBy { get; internal set; }
 
         /// <summary>
         /// closed_at
         /// </summary>
         [DataMember(Name = "closed_at")]
-        public string ClosedAt { get; }
+        public string ClosedAt { get; internal set; }
 
         /// <summary>
         /// blob_id
         /// </summary>
         [DataMember(Name = "blob_id")]
-        public string BlobId { get; }
+        public string BlobId { get; internal set; }
 
         /// <summary>
         /// attachments
         /// </summary>
         [DataMember(Name = "attachments")]
-        public List<string> Attachments { get; }
+        public List<string> Attachments { get; internal set; }
 
         /// <summary>
         /// actions
@@ -196,7 +196,7 @@ namespace Socrata.DSMAPI
         /// show
         /// </summary>
         [DataMember(Name = "show")]
-        public string Show { get; set; }
+        public string Show { get; internal set; }
 
         /// <summary>
         /// plan
@@ -214,18 +214,18 @@ namespace Socrata.DSMAPI
         /// discard
         /// </summary>
         [DataMember(Name = "discard")]
-        public string Discard { get; }
+        public string Discard { get; internal set; }
 
         /// <summary>
         /// create_source
         /// </summary>
         [DataMember(Name = "create_source")]
-        public string CreateSource { get; set; }
+        public string CreateSource { get; internal set; }
 
         /// <summary>
         /// apply
         /// </summary>
         [DataMember(Name = "apply")]
-        public string Apply { get; set; }
+        public string Apply { get; internal set; }
     }
 }

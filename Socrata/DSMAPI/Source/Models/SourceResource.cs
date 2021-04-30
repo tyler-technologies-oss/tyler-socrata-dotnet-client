@@ -1,6 +1,7 @@
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Socrata.DSMAPI
 {
@@ -8,6 +9,12 @@ namespace Socrata.DSMAPI
     [DataContract]
     public class SourceResource
     {
+        string fourfour;
+        public SourceResource(string fourfour)
+        {
+            this.fourfour = fourfour;
+        }
+
         /// <summary>
         /// Source Type
         ///</summary>
@@ -22,7 +29,7 @@ namespace Socrata.DSMAPI
 
         public InputSchema GetLatestInputSchema()
         {
-            return this.InputSchemas.OrderByDescending(x => x.Id).First();
+            return InputSchemas.OrderByDescending(x => x.Id).First();
         }
 
         /// <summary>
@@ -59,7 +66,8 @@ namespace Socrata.DSMAPI
         /// filesize
         ///</summary>
         [DataMember(Name="filesize")]
-        public int Filesize { get; }
+
+        public int? Filesize { get; internal set; }
 
         /// <summary>
         /// failure_details

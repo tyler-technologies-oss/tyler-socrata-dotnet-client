@@ -1,10 +1,6 @@
 using NUnit.Framework;
-using NUnit.Compatibility;
 using System;
 using Socrata.DSMAPI;
-using Socrata.SODA;
-using Socrata.SODA.Schema;
-using System.Collections.Generic;
 
 namespace Socrata
 {
@@ -16,9 +12,23 @@ namespace Socrata
         /*******************/
         SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
 
-        public Resource TestDSMAPICreate()
+        [Test]
+        public void TestDSMAPICreate()
         {
-            return new Resource("tzmz-8bnb", socrataClient.httpClient);
+            DsmapiResourceBuilder builder = socrataClient.CreateDsmapiResourceBuilder("ToDelete");
+            Revision initialRevision = builder
+                .SetDescription($"{System.DateTime.Now} <b>TEST</b>")
+                .Build();
+            Source source = initialRevision.CreateUploadSource("test-csv.csv");
+            string filepath = @"Incidents.csv";
+            string csv = System.IO.File.ReadAllText(filepath);
+            source.AddBytesToSource(csv);
+            source.AwaitCompletion(status => Console.WriteLine(status));
+            initialRevision.Apply();
+            initialRevision.AwaitCompletion(status => Console.WriteLine(status));
+            Resource newResource = new Resource(initialRevision.Metadata.FourFour, socrataClient.httpClient);
+            newResource.Delete();
+            Assert.IsTrue(true);
         }
 
         [Test, Order(2)]
@@ -37,7 +47,7 @@ namespace Socrata
         [Test, Order(3)]
         public void TestDSMAPISetDescription()
         {
-            string newdesc = $"{System.DateTime.Now} <b>yup</b>"; 
+            string newdesc = $"{System.DateTime.Now} <b>TEST</b>"; 
             Resource resource = socrataClient.GetResource("tzmz-8bnb");
             Revision revision = resource.OpenRevision(RevisionType.REPLACE);
             revision.CreateViewSource();
@@ -120,20 +130,31 @@ namespace Socrata
             revision.AwaitCompletion(status => Console.WriteLine(status));
         }
         
-        // [Test, Order(9)]
+        [Test, Order(9)]
         public void TestDSMAPIChangeOutputSchema()
         {
-            Resource resource = socrataClient.GetResource("tzmz-8bnb");
-            Revision revision = resource.OpenRevision(RevisionType.REPLACE);
-            Source source = revision.CreateStreamingSource("test-csv.csv");
-            ByteSink sink = source.StreamingSource(ContentType.CSV);
-            // Open the stream and read the file.
-            sink.FileSink(@"Incidents.csv");
+            DsmapiResourceBuilder builder = socrataClient.CreateDsmapiResourceBuilder("ToDelete");
+            Revision initialRevision = builder
+                .SetDescription($"{System.DateTime.Now} <b>TEST</b>")
+                .Build();
+            Source source = initialRevision.CreateUploadSource("test-csv.csv");
+            string filepath = @"Incidents.csv";
+            string csv = System.IO.File.ReadAllText(filepath);
+            source.AddBytesToSource(csv);
             source.AwaitCompletion(status => Console.WriteLine(status));
-
-            // revision.Apply();
-            // revision.AwaitCompletion(status => Console.WriteLine(status));
-            // Assert.Fail();
+            OutputSchema os = source.GetLatestOutputSchema();
+            os.ChangeColumnName("agency", "agency2")
+                .ChangeColumnDescription("area_district", "TEST")
+                .ChangeTransform("area_beat", Transforms.NUMBER("area_beat"))
+                .ChangeTransform("area_station", Transforms.CUSTOM("upper('TEST')"))
+                .ChangeTransform("area_quadrant", Transforms.CUSTOM("replace(" + Transforms.TEXT("incident_id").Value + ", '0', '1')"))
+                .Submit();
+            source.AwaitCompletion(status => Console.WriteLine(status));
+            initialRevision.Apply();
+            initialRevision.AwaitCompletion(status => Console.WriteLine(status));
+            Resource newResource = new Resource(initialRevision.Metadata.FourFour, socrataClient.httpClient);
+            newResource.Delete();
+            Assert.IsTrue(true);
         }
     }
 }

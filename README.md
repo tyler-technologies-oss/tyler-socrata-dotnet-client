@@ -22,13 +22,44 @@ Resource dataset = client.GetResource("abcd-1234");
 ***Note***
 [Dataset IDs](https://support.socrata.com/hc/en-us/articles/202950258-What-is-a-Dataset-UID-or-a-Dataset-4x4-)
 
+Creating a Resource
+-----
+```c#
+// Through DSMAPI
+  DsmapiResourceBuilder builder = socrataClient.CreateDsmapiResourceBuilder("ToDelete");
+      Revision initialRevision = builder
+          .SetDescription($"{System.DateTime.Now} <b>TEST</b>")
+          .Build();
+  Source source = initialRevision.CreateUploadSource("test-csv.csv");
+  string filepath = @"Incidents.csv";
+  string csv = System.IO.File.ReadAllText(filepath);
+  source.AddBytesToSource(csv);
+  source.AwaitCompletion(status => Console.WriteLine(status));
+  OutputSchema os = source.GetLatestOutputSchema();
+  os.ChangeColumnName("agency", "agency2")
+      .ChangeColumnDescription("area_district", "TEST")
+      .ChangeTransform("area_beat", Transforms.NUMBER("area_beat"))
+      .ChangeTransform("area_station", Transforms.CUSTOM("upper('TEST')"))
+      .ChangeTransform("area_quadrant", Transforms.CUSTOM("replace(" + Transforms.TEXT("incident_id").Value + ", '0', '1')"))
+      .Submit();
+  source.AwaitCompletion(status => Console.WriteLine(status));
+  initialRevision.Apply();
+  initialRevision.AwaitCompletion(status => Console.WriteLine(status));
+  Resource newResource = new Resource(initialRevision.Metadata.FourFour, socrataClient.httpClient);
+// Through SODA
+  SODASchema schema = new SchemaBuilder()
+      .AddColumn(new Column("Text", SocrataDataType.TEXT))
+      .AddColumn(new Column("Date", SocrataDataType.DATETIME, "Data Column Description"))
+      .Build();
+  Resource newDataset = socrataClient.CreateSodaResourceBuilder("ToDelete")
+      .SetSchema(schema)
+      .Build();
+```
+
 Working with Resources
 ----
-
 ### Data Manipulation
-
 #### Socrata Data Types and You
-
 | Socrata Data Type | Rough SQL Mapping | Example |
 | ----------------- | ----------------- | ------- |
 | Text              | varchar, text     | "Text" |
@@ -37,7 +68,6 @@ Working with Resources
 | Timestamp         | convert(datetime, 426) | "2020-01-01T13:42:10" |
 | Boolean           | boolean, bit      | 1, true |
 | Null | null | null |
-
 ***Notes:*** 
 - The escape character for text values is `\` 
 - Dates must be passed in as string
@@ -47,7 +77,7 @@ Working with Resources
 
 #### Geospatial Data
 
-While the Socrata platform does support geocoding, it is not supported via this SDK currently. Any geospatial data will need to converted into [Well-Known Text (WKT)](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) with WGS84 (ESPG 4326) Latitude and Longitude values. 
+Any geospatial data will need to converted into [Well-Known Text (WKT)](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) with WGS84 (ESPG 4326) Latitude and Longitude values or geocoded via a DSMAPI transform.
 
 In general, a decimal precision of 5 is sufficient.
 
@@ -72,11 +102,6 @@ List<Dictionary<string, string>> newRecords = new List<Dictionary<string, string
   new Dictionary<string, string>{{"api_field", "nextvalue"},{"other_field", "test"}}
 };
 Result result = dataset.Rows().Insert(newRecords);
-
-// Check if it was successful
-Assert.IsFalse(Result.IsError);
-// Check the results
-Assert.AreEqual(newRecords.Length, result.Inserted);
 ```
 ##### Update
 ```c#
@@ -86,11 +111,6 @@ List<Dictionary<string, object>> recordsToUpdate = new List<Dictionary<string, o
   new Dictionary<string, object>{{"row_identifier", 1},{"column_that_changed", "newvalue"}}
 };
 Result result = dataset.Rows().Update(recordsToUpdate);
-
-// Check if it was successful
-Assert.IsFalse(Result.IsError);
-// Check the results
-Assert.AreEqual(recordsToUpdate.Length, result.Updated);
 ```
 ##### Delete
 ```c#
@@ -100,21 +120,18 @@ List<Dictionary<string, string>> recordsToDelete = new List<Dictionary<string, s
   new Dictionary<string, string>{{"row_identifier", "ID-1"}}
 };
 Result result = dataset.Rows().Delete(recordsToDelete);
-
+```
+##### Check Status
+```c#
 // Check if it was successful
 Assert.IsFalse(Result.IsError);
 // Check the results
-Assert.AreEqual(recordsToDelete.Length, result.Deleted);
+Assert.AreEqual(newRecords.Length, result.Inserted);
 ```
 
 Dataset Management API
 ---
 [Full Documentation](https://socratapublishing.docs.apiary.io/#introduction/examples)
-
-### Revision Types
-Replace: A full replace of the dataset
-Update: A upsert of the contents based off the row identifier
-Delete: A delete of the contents based off the row identifier
 
 ### File Types
 | file extension | content type |
@@ -128,11 +145,9 @@ Delete: A delete of the contents based off the row identifier
 ### Create a Revision
 ```c#
   Resource resource = socrataClient.GetResource("tzmz-8bnb");
-  Revision revision = resource.OpenRevision(RevisionType.REPLACE);
+  Revision revision = resource.OpenRevision(RevisionType.REPLACE); // UPDATE/DELETE
   Source source = revision.CreateUploadSource("test-csv.csv");
 ```
-
-### Using an Import Config
 
 ### Small (in memory) file uploads
 ```c#
@@ -155,7 +170,6 @@ Delete: A delete of the contents based off the row identifier
     string errorFile = "C:\Path\To\ErrorRows.csv";
     int numberOfErrors = source.NumberOfErrors();
     source.ExportErrorRows(errorFile);
-    // Throw an exception
     throw new Exception($"{numberOfErrors} Error(s) were found in the upload");
   }
 ```
@@ -180,8 +194,7 @@ Reading Data
 ---
 You can also use the Rows() to access records in the dataset
 ```c#
-/*
-Example custom class
+/* Example custom class
 [DataContract]
 class MyResource
 {
@@ -195,7 +208,6 @@ List<MyResource> allRecords = rows.FetchAll<MyResource>();
 long limit = 1000;
 long offset = 0;
 List<MyResource> someRecords = rows.Fetch<MyResource>(limit, offset);
-
 // Conversely, you can just use a Map<string, object>
 List<Map<string, object>> allRecords = rows.FetchAll<Map<string, object>>();
 ```
@@ -206,13 +218,14 @@ You might have a really big dataset, which will require paginating over the resu
 ```c#
 Resource resource = socrataClient.GetResource("tzmz-8bnb");
 Rows rows = resource.Rows();
+List<Map<string, object>> allRecords = new List<Map<string, object>>()
 // Get the total number of records
 long total = rows.Count();
 long limit = 1000;
 long offset = 0;
 while(offset < total)
 {
-  List<Map<string, object>> allRecords = rows.Fetch<Map<string, object>>(limit, offset);
+  allRecordsrows.Add(rows.Fetch<Map<string, object>>(limit, offset));
   offset += limit;
 }
 ```

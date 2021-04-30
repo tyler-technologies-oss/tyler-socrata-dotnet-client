@@ -9,11 +9,13 @@ namespace Socrata.DSMAPI {
         private SocrataHttpClient httpClient;
         public SourceResource Metadata;
         public SourceLinks Links;
-        public Source(SocrataHttpClient httpClient, SourceResource resource, SourceLinks links)
+        string fourfour;
+        public Source(SocrataHttpClient httpClient, SourceResource resource, SourceLinks links, string fourfour)
         {
             this.httpClient = httpClient;
             this.Metadata = resource;
             this.Links = links;
+            this.fourfour = fourfour;
         }
 
         public SourceResponse UpdateOutputSchema(List<OutputSchemaColumn> updatedColumns)
@@ -26,7 +28,7 @@ namespace Socrata.DSMAPI {
 
         public List<OutputSchemaColumn> GetLatestOutputColumns()
         {
-            return Metadata.GetLatestInputSchema().GetLatestOutputSchema().OutputColumns;
+            return Metadata.GetLatestInputSchema().GetLatestOutputSchema(this.httpClient, this.fourfour).osModel.OutputColumns;
         }
 
         public ByteUploadResponse AddBytesToSource(string data)
@@ -59,6 +61,8 @@ namespace Socrata.DSMAPI {
                 } else
                 {
                     lambda("complete");
+                    this.Metadata = req.Resource;
+                    this.Links = req.Links;
                     break;
                 }
             }
@@ -80,7 +84,7 @@ namespace Socrata.DSMAPI {
             SourceResponse req = httpClient.GetJson<SourceResponse>(this.Links.Show);
             this.Links = req.Links;
             this.Metadata = req.Resource;
-            return this.Metadata.GetLatestInputSchema().GetLatestOutputSchema().error_count.GetValueOrDefault(0);
+            return this.Metadata.GetLatestInputSchema().OutputSchemas.OrderByDescending(x => x.Id).First().error_count.GetValueOrDefault(0);
         }
 
         /// <summary>
@@ -88,7 +92,7 @@ namespace Socrata.DSMAPI {
         /// </summary>
         public void ExportErrorRows(string outpath)
         {
-            var Ids = this.Metadata.GetLatestInputSchema().GetLatestOutputSchema();
+            OutputSchemaModel Ids = this.Metadata.GetLatestInputSchema().OutputSchemas.OrderByDescending(x => x.Id).First();
             string Endpoint = this.Links.InputSchemaLinks.OutputSchemaLinks.SchemaErrors.Replace("{input_schema_id}", Ids.InputSchemaId.ToString()).Replace("{output_schema_id}", Ids.Id.ToString());
             var req = httpClient.Get(Endpoint, "text/csv");
             using (System.IO.FileStream fs = System.IO.File.Create(outpath))
@@ -96,6 +100,13 @@ namespace Socrata.DSMAPI {
                 var bs = req.Content.ReadAsByteArrayAsync().Result;
                 fs.Write(bs);
             }
+        }
+
+        public OutputSchema GetLatestOutputSchema()
+        {
+            OutputSchemaModel Ids = this.Metadata.GetLatestInputSchema().OutputSchemas.OrderByDescending(x => x.Id).First();
+            string Endpoint = this.Links.InputSchemaLinks.Transform.Replace("{input_schema_id}", Ids.InputSchemaId.ToString()).Replace("{output_schema_id}", Ids.Id.ToString());
+            return this.Metadata.GetLatestInputSchema().GetLatestOutputSchema(this.httpClient, Endpoint);
         }
 
     }

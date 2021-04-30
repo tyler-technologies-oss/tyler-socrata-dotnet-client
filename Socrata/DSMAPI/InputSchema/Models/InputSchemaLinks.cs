@@ -11,7 +11,7 @@ namespace Socrata.DSMAPI
         /// transform
         ///</summary>
         [DataMember(Name="transform")]
-        public string Transform { get; }
+        public string Transform { get; internal set; }
 
         /// <summary>
         /// show

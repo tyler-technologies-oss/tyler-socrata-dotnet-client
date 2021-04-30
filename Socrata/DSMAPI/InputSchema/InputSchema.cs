@@ -1,6 +1,7 @@
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using System.Linq;
+using Socrata.HTTP;
 
 namespace Socrata.DSMAPI
 {
@@ -20,9 +21,9 @@ namespace Socrata.DSMAPI
         [DataMember(Name="output_schemas")]
         public List<OutputSchemaModel> OutputSchemas { get; set; }
 
-        public OutputSchemaModel GetLatestOutputSchema()
+        public OutputSchema GetLatestOutputSchema(SocrataHttpClient httpClient, string fourfour)
         {
-            return OutputSchemas.OrderByDescending(x => x.Id).First();
+            return new OutputSchema(httpClient, OutputSchemas.OrderByDescending(x => x.Id).First(), fourfour);
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Socrata.DSMAPI
         /// id
         ///</summary>
         [DataMember(Name="id")]
-        public int Id { get; }
+        public int Id { get; internal set; }
 
         /// <summary>
         /// created_by

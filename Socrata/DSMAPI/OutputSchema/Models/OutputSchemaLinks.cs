@@ -16,7 +16,7 @@ namespace Socrata.DSMAPI
         /// show
         ///</summary>
         [DataMember(Name="show")]
-        public string Show { get; }
+        public string Show { get; internal set; }
 
         /// <summary>
         /// schema_errors
