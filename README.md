@@ -125,32 +125,27 @@ Delete: A delete of the contents based off the row identifier
 | ZIP (shapefile) | application/octet-stream |
 | BLOB | application/octet-stream |
 
-### Using an Import Config
-
-### Small (in memory) file uploads
+### Create a Revision
 ```c#
   Resource resource = socrataClient.GetResource("tzmz-8bnb");
   Revision revision = resource.OpenRevision(RevisionType.REPLACE);
   Source source = revision.CreateUploadSource("test-csv.csv");
+```
+
+### Using an Import Config
+
+### Small (in memory) file uploads
+```c#
   string filepath = @"C:\Path\To\MyFile.csv";
   string csv = System.IO.File.ReadAllText(filepath);
   source.AddBytesToSource(csv);
-  source.AwaitCompletion(status => Console.WriteLine(status));
-  revision.Apply();
-  revision.AwaitCompletion(status => Console.WriteLine(status));
 ```
 
 ### Large (Streaming) file uploads
 ```c#
-  Resource resource = socrataClient.GetResource("tzmz-8bnb");
-  Revision revision = resource.OpenRevision(RevisionType.REPLACE);
-  Source source = revision.CreateStreamingSource("test-csv.csv");
   ByteSink sink = source.StreamingSource(ContentType.CSV);
   //Open the stream and read the file.
   sink.FileSink(@"C:\Path\To\MyFile.csv");
-  source.AwaitCompletion(status => Console.WriteLine(status));
-  revision.Apply();
-  revision.AwaitCompletion(status => Console.WriteLine(status));
 ```
 
 ### Handling error rows
@@ -172,17 +167,15 @@ Delete: A delete of the contents based off the row identifier
   revision.CreateViewSource();
   revision.SetDescription("New description for the <b>resource</b>");
   revision.RenameResource("New Name");
+```
+
+### Apply the revision
+```c#
+  source.AwaitCompletion(status => Console.WriteLine(status));
   revision.Apply();
   revision.AwaitCompletion(status => Console.WriteLine(status));
 ```
 
-### Column Metadata Revisions
-```c#
-  Resource resource = socrataClient.GetResource("tzmz-8bnb");
-  Revision revision = resource.OpenRevision(RevisionType.REPLACE);
-  Source source = revision.CreateViewSource();
-  revision.Apply();
-```
 Reading Data
 ---
 You can also use the Rows() to access records in the dataset

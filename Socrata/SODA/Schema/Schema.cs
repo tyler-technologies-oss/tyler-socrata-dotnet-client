@@ -3,12 +3,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Linq;
 
-namespace Socrata
+namespace Socrata.SODA.Schema
 {
-    public class Schema
+    public class SODASchema
     {
         public List<Column> Columns {get; set;}
-        public Schema(List<Column> columns)
+        public SODASchema(List<Column> columns)
         {
             this.Columns = columns;
         }

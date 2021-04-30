@@ -2,7 +2,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 
-namespace Socrata
+namespace Socrata.SODA.Schema
 {
     [DataContract]
     public class ColumnMetadata

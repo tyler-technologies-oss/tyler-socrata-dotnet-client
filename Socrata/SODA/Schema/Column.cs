@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Socrata
+namespace Socrata.SODA.Schema
 {
     public class Column
     {

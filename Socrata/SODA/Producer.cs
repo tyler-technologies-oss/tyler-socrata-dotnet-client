@@ -22,7 +22,7 @@ namespace Socrata.SODA
             };
         }
 
-        public Result UpdateRecord(IDictionary<string, object> record) => httpClient.PostJson<Result>("/resource/" + this.Id + ".json", SingletonList(record));
+        public Result UpdateRecord(IDictionary<string, object> record) => httpClient.PostJson<Result>("/resource/" + this.Id + ".json", SingletonList(record), true);
 
         public Result InsertRecord(IDictionary<string, object> record) => UpdateRecord(record);
 
@@ -32,10 +32,10 @@ namespace Socrata.SODA
             return httpClient.PostJson<Result>("/resource/" + this.Id + ".json", SingletonList(record));
         }
 
-        public Result UpdateRecords(IEnumerable<IDictionary<string, object>> records) => httpClient.PostJson<Result>("/resource/" + this.Id + ".json", records);
+        public Result UpdateRecords(IEnumerable<IDictionary<string, object>> records) => httpClient.PostJson<Result>("/resource/" + this.Id + ".json", records, true);
         
 
-        public Result InsertRecords(IEnumerable<IDictionary<string, object>> records) => httpClient.PostJson<Result>("/resource/" + this.Id + ".json", records);
+        public Result InsertRecords(IEnumerable<IDictionary<string, object>> records) => httpClient.PostJson<Result>("/resource/" + this.Id + ".json", records, true);
         
         // <summary>
         // Delete a set of records from the dataset
@@ -43,7 +43,7 @@ namespace Socrata.SODA
         public Result DeleteRecords(IEnumerable<IDictionary<string, object>> records)
         {
             records.ToList().ForEach((record) => record.Add(":deleted", true));
-            return httpClient.PostJson<Result>("/resource/" + this.Id + ".json", records);
+            return httpClient.PostJson<Result>("/resource/" + this.Id + ".json", records, true);
         }
     }
 }

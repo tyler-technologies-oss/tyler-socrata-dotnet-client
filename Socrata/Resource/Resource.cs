@@ -9,18 +9,19 @@ using NUnit.Framework;
 using Socrata.HTTP;
 using Socrata.DSMAPI;
 using Socrata.SODA;
+using Socrata.SODA.Schema;
 
 namespace Socrata
 {
     
     public class Resource : IResource 
     {
-        string Id;
+        public string Id { get; internal set; }
         bool Deleted = false;
         SocrataHttpClient httpClient;
 
         public ResourceMetadata metadata;
-        public Schema schema;
+        public SODASchema schema;
         Regex idRegex = new Regex(@"^[a-z0-9]{4}-[a-z0-9]{4}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public Resource(string id, SocrataHttpClient httpClient)
@@ -79,23 +80,6 @@ namespace Socrata
             System.Console.WriteLine(workingCopyResponse.Status);
             Thread.Sleep(3000);
             return CreateWorkingCopy();
-        }
-
-        public void AssertSchemaMatch<T>(T schema) where T : class
-        {
-            var newSchema = new SchemaBuilder();
-
-            var t = schema.GetType().GetFields().ToList();
-            foreach (FieldInfo p in t)
-            {
-                Column c = (Column)p.GetValue(schema);
-                newSchema.AddColumn(c);
-            }
-            List<string> currSchemaDict = this.schema.ConstructSchemaJson().Select(c => (string)c.GetValueOrDefault("name")).ToList<string>();
-            List<string> newSchemaDict = newSchema.ConstructSchemaJson().Select(c => (string)c.GetValueOrDefault("name")).ToList<string>();
-            currSchemaDict.Sort();
-            newSchemaDict.Sort();
-            Assert.AreEqual(currSchemaDict, newSchemaDict);
         }
 
         public SchemaBuilder GetSchema()

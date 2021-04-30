@@ -10,7 +10,7 @@ namespace Socrata.HTTP
     {
         HttpClient httpClient;
         HttpRequestMessage httpRequestMessage;
-        protected Uri host { get; private set; }
+        public Uri host { get; private set; }
 
         public SocrataHttpClient(Uri host, string apikey, string apitoken)
         {
@@ -22,20 +22,30 @@ namespace Socrata.HTTP
             httpClient.DefaultRequestHeaders.Add("Authorization", String.Format("Basic {0}", Convert.ToBase64String(authBytes)));
         }
             
-        private HttpResponseMessage _execute(HttpRequestMessage httpRequestMessage, string ContentType = "application/json")
+        private HttpResponseMessage _execute(HttpRequestMessage httpRequestMessage, string ContentType = "application/json", bool dangerously = false)
         {
             httpClient.DefaultRequestHeaders.Remove("Accept");
             httpClient.DefaultRequestHeaders.Add("Accept", ContentType);
             var resp = httpClient.SendAsync(httpRequestMessage).Result;
             // Console.WriteLine(resp.Content.ReadAsStringAsync().Result);
-            resp.EnsureSuccessStatusCode();
+            if(!dangerously) {
+                resp.EnsureSuccessStatusCode();
+            }
             return resp;
         }
+
         public HttpResponseMessage Get(string endpoint, string ContentType = "application/json")
         {
             var url = new Uri(host, endpoint);
             Console.WriteLine("Get: " + url);
             httpRequestMessage = new HttpRequestMessage { RequestUri = url, Method = new HttpMethod("GET") };
+            return this._execute(httpRequestMessage, ContentType);
+        }
+
+        public HttpResponseMessage Get(Uri uri, string ContentType = "application/json")
+        {
+            Console.WriteLine("Get: " + uri);
+            httpRequestMessage = new HttpRequestMessage { RequestUri = uri, Method = new HttpMethod("GET") };
             return this._execute(httpRequestMessage, ContentType);
         }
 
@@ -48,13 +58,13 @@ namespace Socrata.HTTP
             return this._execute(httpRequestMessage);           
         }
 
-        public HttpResponseMessage Post(string endpoint, HttpContent content)
+        public HttpResponseMessage Post(string endpoint, HttpContent content, bool dangerously = false)
         {
             Uri url = new Uri(host, endpoint);
             Console.WriteLine("Post: " + url);
             httpRequestMessage = new HttpRequestMessage { RequestUri = url, Method = new HttpMethod("POST") };
             httpRequestMessage.Content = content;
-            return this._execute(httpRequestMessage);
+            return this._execute(httpRequestMessage, dangerously: dangerously);
         }
 
         public HttpResponseMessage Patch(string endpoint, HttpContent content)
@@ -85,6 +95,14 @@ namespace Socrata.HTTP
             var result = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(resp.Content.ReadAsStringAsync().Result);
             return result;
         }
+
+        public T GetJson<T>(Uri uri) where T : class
+        {
+            var resp = Get(uri);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(resp.Content.ReadAsStringAsync().Result);
+            return result;
+        }
+
         /// <summary>
         /// Execute PUT request with an object and parse response as T.
         /// </summary>
@@ -115,14 +133,14 @@ namespace Socrata.HTTP
         }
 
 
-        public T PostJson<T>(string endpoint, object obj) where T : class
+        public T PostJson<T>(string endpoint, object obj, bool dangerously = false) where T : class
         {
             var content = new StringContent(
                 Newtonsoft.Json.JsonConvert.SerializeObject(obj), 
                 Encoding.UTF8, 
                 "application/json"
             );
-            var resp = this.Post(endpoint, content);
+            var resp = this.Post(endpoint, content, dangerously);
             T result = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(resp.Content.ReadAsStringAsync().Result);
             return result;
         }

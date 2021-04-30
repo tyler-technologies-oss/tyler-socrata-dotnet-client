@@ -2,38 +2,20 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Socrata.HTTP;
+using Socrata.SODA.Schema;
 
 namespace Socrata
 {
-    public class ResourceBuilder
+    public class SodaResourceBuilder
     {
-        string name;
+        string name { get; set; }
         string description;
-        Schema schema;
+        SODASchema Schema;
         SocrataHttpClient httpClient;
-        public ResourceBuilder(string name, SocrataHttpClient httpClient)
+        public SodaResourceBuilder(string name, SocrataHttpClient httpClient)
         {
             this.name = name;
             this.httpClient = httpClient;
-        }
-
-        public ResourceBuilder SetName(string name)
-        {
-            this.name = name;
-            return this;
-        }
-
-        public ResourceBuilder SetSchema(Schema schema)
-        {
-            // TODO: Validate the schema
-            this.schema = schema;
-            return this;
-        }
-
-        public ResourceBuilder SetDescription(string description)
-        {
-            this.description = description;
-            return this;
         }
 
         public Resource Build()
@@ -49,7 +31,7 @@ namespace Socrata
             {
                 { "name", this.name },
                 { "description", this.description },
-                { "columns", this.schema.ConstructSchemaJson() },
+                { "columns", this.Schema.ConstructSchemaJson() },
                 // TODO: support adding categories and tags
                 { "category", null },
                 { "tags", null }
@@ -62,6 +44,11 @@ namespace Socrata
             return d;
         }
 
+        public SodaResourceBuilder SetSchema(SODASchema schema)
+        {
+            this.Schema = schema;
+            return this;
+        }
         private string Create()
         {
             var t = this.ResourceJson();

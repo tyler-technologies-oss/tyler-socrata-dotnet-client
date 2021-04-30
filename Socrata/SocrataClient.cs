@@ -7,7 +7,7 @@ namespace Socrata
     using Socrata.HTTP;
     public class SocrataClient : ISocrataClient
     {
-        SocrataHttpClient httpClient;
+        public SocrataHttpClient httpClient { get; internal set; }
 
         /// <summary>
         /// The Base Socrata Client.
@@ -36,14 +36,18 @@ namespace Socrata
         /// <summary>
         /// Create a new resource on the domain.
         /// </summary>
-        public ResourceBuilder CreateResourceBuilder(string name) => new ResourceBuilder(name, httpClient);
+        public SodaResourceBuilder CreateSodaResourceBuilder(string name) => new SodaResourceBuilder(name, httpClient);
 
         /// <summary>
         /// List all resources on the domain.
         /// </summary>
-        public List<Resource> GetResources()
+        public List<DomainResource> GetResources()
         {
-            return new List<Resource> {};
+            DomainResources dr = new DomainResources(httpClient);
+            List<DomainResult> res = dr.Fetch();
+            List<DomainResource> resources = new List<DomainResource>();
+            res.ForEach((resource) => resources.Add(resource.Resource));
+            return resources;
         }
     }
 }

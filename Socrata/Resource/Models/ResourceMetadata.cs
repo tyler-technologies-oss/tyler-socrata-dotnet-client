@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 
 namespace Socrata
 {
+    using Socrata.SODA.Schema;
+    
     [DataContract]
     public class ResourceMetadata
     {

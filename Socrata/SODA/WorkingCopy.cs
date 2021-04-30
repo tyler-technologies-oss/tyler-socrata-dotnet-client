@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Socrata.HTTP;
+using Socrata.SODA.Schema;
 
 namespace Socrata.SODA
 {
@@ -106,7 +107,7 @@ namespace Socrata.SODA
             return true;
         }
 
-        public WorkingCopy SetSchema(Schema schema)
+        public WorkingCopy SetSchema(SODASchema schema)
         {
             // basically let's just diff these schemas and then send it over to Apply
             List<Column> currentSchema = Metadata.Columns.Select(c => c.ToColumn()).ToList();

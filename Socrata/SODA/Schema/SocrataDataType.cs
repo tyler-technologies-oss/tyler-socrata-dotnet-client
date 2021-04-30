@@ -1,4 +1,4 @@
-namespace Socrata
+namespace Socrata.SODA.Schema
 {
     public class SocrataDataType
     {

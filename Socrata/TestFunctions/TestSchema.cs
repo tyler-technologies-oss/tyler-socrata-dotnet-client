@@ -1,3 +1,5 @@
+using Socrata.SODA.Schema;
+
 namespace Socrata
 {
     public class TestSchema

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Linq;
 
-namespace Socrata
+namespace Socrata.SODA.Schema
 {
     public class SchemaBuilder
     {
@@ -37,7 +37,7 @@ namespace Socrata
 
         public List<Column> GetColumns() => this.Columns;
 
-        public Schema Build() => new Schema(Columns);
+        public SODASchema Build() => new SODASchema(Columns);
 
         public SchemaBuilder BuildFromResourceMetadata(List<ColumnMetadata> columns)
         {
