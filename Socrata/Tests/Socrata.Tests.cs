@@ -9,13 +9,8 @@ using System.Collections.Generic;
 namespace Socrata
 {
     [TestFixture]
-    public class Tests : TestBase
+    public class Tests
     {
-        // Files are in the TestFunctions folder
-        [DeploymentItemAttribute("Incidents.csv")]
-        // Files are in the TestFunctions folder
-        [DeploymentItemAttribute("Incidents_One_Row.csv")]
-
         [Test]
         public void CreateClient()
         {

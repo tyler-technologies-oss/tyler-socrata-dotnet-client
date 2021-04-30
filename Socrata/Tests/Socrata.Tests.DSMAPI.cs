@@ -5,12 +5,17 @@ using Socrata.DSMAPI;
 namespace Socrata
 {
     [TestFixture]
-    public class DSMAPITests
+    public class DSMAPITests : TestBase
     {
         /*******************/
         /* DSMAPI IT TESTS */
         /*******************/
         SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+
+        // Files are in the TestFunctions folder
+        [DeploymentItemAttribute("Incidents.csv")]
+        // Files are in the TestFunctions folder
+        [DeploymentItemAttribute("Incidents_One_Row.csv")]
 
         [Test]
         public void TestDSMAPICreate()
