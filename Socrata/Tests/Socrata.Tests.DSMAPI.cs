@@ -117,6 +117,21 @@ namespace Socrata
         }
         
         [Test]
+        public void TestDSMAPIAutomateThis()
+        {
+            string config = "Incident_04_29_2021_23_29_48_05-03-2021_0ea8";
+            Resource resource = socrataClient.GetResource("e9z4-9937");
+            Revision revision = resource.OpenRevisionUsingConfig(config);
+            Source source = revision.CreateUploadSource("test-csv.csv");
+            string filepath = @"Incidents.csv";
+            string csv = System.IO.File.ReadAllText(filepath);
+            source.AddBytesToSource(csv);
+            source.AwaitCompletion(status => Console.WriteLine(status));
+            revision.Apply();
+            revision.AwaitCompletion(status => Console.WriteLine(status));
+        }
+
+        [Test]
         public void TestDSMAPIChangeOutputSchemaAndSetRowId()
         {
             DsmapiResourceBuilder builder = socrataClient.CreateDsmapiResourceBuilder($"ToDelete_{System.DateTime.Now}");

@@ -66,6 +66,19 @@ namespace Socrata
             return new Revision(httpClient, revisionResponse);;
         }
 
+        // <summary>
+        // Opens a Revision for the dataset using the config
+        // </summary>
+        public Revision OpenRevisionUsingConfig(string config)
+        {
+            Dictionary<string, string> revisionType = new Dictionary<string, string>();
+            revisionType.Add("config", config);
+            RevisionResponse revisionResponse = 
+                httpClient.PostJson<RevisionResponse>("/api/publishing/v1/revision/" + this.Id, revisionType);
+            return new Revision(httpClient, revisionResponse);;
+        }
+
+
         // This function is synchronous, so it won't return until the dataset has finished creating a working copy.
         // To Do: Create async version of this?
         public WorkingCopy CreateWorkingCopy()
