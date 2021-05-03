@@ -111,6 +111,7 @@ namespace Socrata
             string filepath = @"Incidents_One_Row.csv";
             string csv = System.IO.File.ReadAllText(filepath);
             source.AddBytesToSource(csv);
+            source.AwaitCompletion(status => Console.WriteLine(status));
             revision.Apply();
             revision.AwaitCompletion(status => Console.WriteLine(status));
         }
