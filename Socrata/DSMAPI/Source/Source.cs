@@ -26,11 +26,6 @@ namespace Socrata.DSMAPI {
             return httpClient.PostJson<SourceResponse>(transformInputSchemaLink, updatedSchema);
         }
 
-        public List<OutputSchemaColumn> GetLatestOutputColumns()
-        {
-            return Metadata.GetLatestInputSchema().GetLatestOutputSchema(this.httpClient, this.fourfour).osModel.OutputColumns;
-        }
-
         public ByteUploadResponse AddBytesToSource(string data)
         {
             return httpClient.PostBytes<ByteUploadResponse>(this.Links.Bytes, Encoding.UTF8.GetBytes(data));
@@ -105,8 +100,9 @@ namespace Socrata.DSMAPI {
         public OutputSchema GetLatestOutputSchema()
         {
             OutputSchemaModel Ids = this.Metadata.GetLatestInputSchema().OutputSchemas.OrderByDescending(x => x.Id).First();
-            string Endpoint = this.Links.InputSchemaLinks.Transform.Replace("{input_schema_id}", Ids.InputSchemaId.ToString()).Replace("{output_schema_id}", Ids.Id.ToString());
-            return this.Metadata.GetLatestInputSchema().GetLatestOutputSchema(this.httpClient, Endpoint);
+            string TransformEndpoint = this.Links.InputSchemaLinks.Transform.Replace("{input_schema_id}", Ids.InputSchemaId.ToString());
+            string Show = this.Links.InputSchemaLinks.Transform.Replace("{input_schema_id}", Ids.InputSchemaId.ToString()).Replace("{output_schema_id}", Ids.Id.ToString());
+            return this.Metadata.GetLatestInputSchema().GetLatestOutputSchema(this.httpClient, TransformEndpoint, Show);
         }
 
     }

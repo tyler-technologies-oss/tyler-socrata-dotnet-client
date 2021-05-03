@@ -1,4 +1,5 @@
 using Socrata.HTTP;
+using System;
 
 namespace Socrata.DSMAPI
 {
@@ -6,12 +7,14 @@ namespace Socrata.DSMAPI
     {
         SocrataHttpClient httpClient;
         public OutputSchemaModel osModel { get; internal set; }
-        string sourceLink;
-        public OutputSchema(SocrataHttpClient httpClient, OutputSchemaModel osModel, string sourceLink)
+        string transformUri;
+        string showUri;
+        public OutputSchema(SocrataHttpClient httpClient, OutputSchemaModel osModel, string transformUri, string showUri)
         {
             this.osModel = osModel;
             this.httpClient = httpClient;
-            this.sourceLink = sourceLink;
+            this.transformUri = transformUri;
+            this.showUri = showUri;
         }
 
         public OutputSchema ChangeTransform(string columnName, Transforms transform)
@@ -52,7 +55,38 @@ namespace Socrata.DSMAPI
 
         public void Submit()
         {
-            this.httpClient.PostJson<OutputSchemaModel>(this.sourceLink, this.osModel);
+            OutputSchemaModel newModel = this.httpClient.PostJson<OutputSchemaModel>(this.transformUri, this.osModel);
+        }
+
+        public bool ValidateRowId(string columnName)
+        {
+            bool valid = false;
+            OutputSchemaResult osResult = this.httpClient.GetJson<OutputSchemaResult>(this.showUri);
+            string ValidateUri = osResult.Links.OutputSchemaLinks.ValidateRowIdUri;
+            osModel.OutputColumns.ForEach((column) => {
+                if(column.DisplayName == columnName)
+                {
+                    int i = osModel.OutputColumns.IndexOf(column);
+                    int colId = osModel.OutputColumns[i].Transform.Id;
+                    System.Console.WriteLine(colId);
+                    System.Console.WriteLine(ValidateUri);
+                    ValidResult res = this.httpClient.GetJson<ValidResult>(ValidateUri.Replace("{transform_id}", colId.ToString()));
+                    valid = res.Valid;
+                }
+            });
+            return valid;
+        }
+
+        public OutputSchema SetRowId(string columnName)
+        {
+            osModel.OutputColumns.ForEach((column) => {
+                if(column.DisplayName == columnName)
+                {
+                    int i = osModel.OutputColumns.IndexOf(column);
+                    osModel.OutputColumns[i].IsPrimaryKey = true;
+                }
+            });
+            return this;
         }
     }
 

@@ -36,7 +36,7 @@ namespace Socrata.DSMAPI
         /// id
         ///</summary>
         [DataMember(Name="id")]
-        public string Id { get; }
+        public int Id { get; internal set; }
 
         /// <summary>
         /// has_cell_edits

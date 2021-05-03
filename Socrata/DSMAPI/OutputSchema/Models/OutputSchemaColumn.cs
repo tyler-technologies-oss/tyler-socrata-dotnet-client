@@ -12,7 +12,7 @@ namespace Socrata.DSMAPI
         /// transform
         ///</summary>
         [DataMember(Name="transform")]
-        public OutputSchemaColumnTransform Transform { get; set; }
+        public OutputSchemaColumnTransform Transform { get; internal set; }
         
         /// <summary>
         /// position

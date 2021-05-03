@@ -116,14 +116,14 @@ namespace Socrata
         }
         
         [Test]
-        public void TestDSMAPIChangeOutputSchema()
+        public void TestDSMAPIChangeOutputSchemaAndSetRowId()
         {
-            DsmapiResourceBuilder builder = socrataClient.CreateDsmapiResourceBuilder("ToDelete");
+            DsmapiResourceBuilder builder = socrataClient.CreateDsmapiResourceBuilder($"ToDelete_{System.DateTime.Now}");
             Revision initialRevision = builder
                 .SetDescription($"{System.DateTime.Now} <b>TEST</b>")
                 .Build();
             Source source = initialRevision.CreateUploadSource("test-csv.csv");
-            string filepath = @"Incidents.csv";
+            string filepath = @"Incidents_One_Row.csv";
             string csv = System.IO.File.ReadAllText(filepath);
             source.AddBytesToSource(csv);
             source.AwaitCompletion(status => Console.WriteLine(status));
@@ -135,10 +135,16 @@ namespace Socrata
                 .ChangeTransform("area_quadrant", Transforms.CUSTOM("replace(" + Transforms.TEXT("incident_id").Value + ", '0', '1')"))
                 .Submit();
             source.AwaitCompletion(status => Console.WriteLine(status));
+            
+            bool validated = os.ValidateRowId("incident_id");
+            Console.WriteLine(validated.ToString());
+            os.SetRowId("incident_id").Submit();
+            source.AwaitCompletion(status => Console.WriteLine(status));
+            
             initialRevision.Apply();
             initialRevision.AwaitCompletion(status => Console.WriteLine(status));
             Resource newResource = new Resource(initialRevision.Metadata.FourFour, socrataClient.httpClient);
-            newResource.Delete();
+            // newResource.Delete();
             Assert.IsTrue(true);
         }
     }

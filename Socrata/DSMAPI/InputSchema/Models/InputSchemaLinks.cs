@@ -35,6 +35,6 @@ namespace Socrata.DSMAPI
         /// latest_output
         ///</summary>
         [DataMember(Name="latest_output")]
-        public string LatestOutput { get; }
+        public string LatestOutput { get; set; }
     }
 }

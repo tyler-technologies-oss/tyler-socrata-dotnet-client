@@ -32,7 +32,7 @@ namespace Socrata
             Dictionary<string, object> newAssetJson = new Dictionary<string, object>();
 
             Dictionary<string, string> revisionType = new Dictionary<string, string>();
-            revisionType.Add("type", "update");
+            revisionType.Add("type", "replace");
 
             
             Dictionary<string, string> metadata = new Dictionary<string, string>();

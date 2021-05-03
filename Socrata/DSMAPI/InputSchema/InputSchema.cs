@@ -21,9 +21,9 @@ namespace Socrata.DSMAPI
         [DataMember(Name="output_schemas")]
         public List<OutputSchemaModel> OutputSchemas { get; set; }
 
-        public OutputSchema GetLatestOutputSchema(SocrataHttpClient httpClient, string fourfour)
+        public OutputSchema GetLatestOutputSchema(SocrataHttpClient httpClient, string transform, string show)
         {
-            return new OutputSchema(httpClient, OutputSchemas.OrderByDescending(x => x.Id).First(), fourfour);
+            return new OutputSchema(httpClient, OutputSchemas.OrderByDescending(x => x.Id).First(), transform, show);
         }
 
         /// <summary>

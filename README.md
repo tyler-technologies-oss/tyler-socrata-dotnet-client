@@ -43,6 +43,13 @@ Creating a Resource
       .ChangeTransform("area_quadrant", Transforms.CUSTOM("replace(" + Transforms.TEXT("incident_id").Value + ", '0', '1')"))
       .Submit();
   source.AwaitCompletion(status => Console.WriteLine(status));
+  bool valid = os.ValidateRowId("incident_id");
+  if(!valid)
+  {
+    throw Exception("Invalid Row Id");
+  }
+  os.SetRowId("incident_id").Submit();
+  source.AwaitCompletion(status => Console.WriteLine(status));
   initialRevision.Apply();
   initialRevision.AwaitCompletion(status => Console.WriteLine(status));
   Resource newResource = new Resource(initialRevision.Metadata.FourFour, socrataClient.httpClient);

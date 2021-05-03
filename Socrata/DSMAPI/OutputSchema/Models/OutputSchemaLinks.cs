@@ -10,7 +10,7 @@ namespace Socrata.DSMAPI
         /// validate_row_id
         ///</summary>
         [DataMember(Name="validate_row_id")]
-        public string ValidateRowId { get; }
+        public string ValidateRowIdUri { get; internal set; }
 
         /// <summary>
         /// show
