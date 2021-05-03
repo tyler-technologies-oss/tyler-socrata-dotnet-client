@@ -36,46 +36,26 @@ namespace Socrata
             Assert.IsTrue(true);
         }
 
-        [Test, Order(2)]
-        public void TestDSMAPIRenameView()
+        [Test]
+        public void TestDSMAPIRenameViewAndSetDescription()
         {
             string newname = $"Incident_{System.DateTime.Now}"; 
-            Resource resource = socrataClient.GetResource("tzmz-8bnb");
+            string newdesc = $"{System.DateTime.Now} <b>TEST</b>"; 
+            Resource resource = socrataClient.GetResource("j88r-tpts");
             Revision revision = resource.OpenRevision(RevisionType.REPLACE);
             revision.CreateViewSource();
             revision.RenameResource(newname);
-            revision.Apply();
-            revision.AwaitCompletion(status => Console.WriteLine(status));
-            Assert.AreEqual(newname, revision.Metadata.Metadata.Name);
-        }
-
-        [Test, Order(3)]
-        public void TestDSMAPISetDescription()
-        {
-            string newdesc = $"{System.DateTime.Now} <b>TEST</b>"; 
-            Resource resource = socrataClient.GetResource("tzmz-8bnb");
-            Revision revision = resource.OpenRevision(RevisionType.REPLACE);
-            revision.CreateViewSource();
             revision.SetDescription(newdesc);
             revision.Apply();
             revision.AwaitCompletion(status => Console.WriteLine(status));
+            Assert.AreEqual(newname, revision.Metadata.Metadata.Name);
             Assert.AreEqual(newdesc, revision.Metadata.Metadata.Description);
         }
 
-        [Test, Order(4)]
-        public void TestDSMAPIWorkflowWithView()
-        {
-            Resource resource = socrataClient.GetResource("tzmz-8bnb");
-            Revision revision = resource.OpenRevision(RevisionType.REPLACE);
-            Source source = revision.CreateViewSource();
-            revision.Apply();
-            revision.AwaitCompletion(status => Console.WriteLine(status));
-        }
-
-        [Test, Order(5)]
+        [Test]
         public void TestDSMAPIReplaceWorkflowWithCSV()
         {
-            Resource resource = socrataClient.GetResource("tzmz-8bnb");
+            Resource resource = socrataClient.GetResource("ud5e-dr4x");
             Revision revision = resource.OpenRevision(RevisionType.REPLACE);
             Source source = revision.CreateUploadSource("test-csv.csv");
             string filepath = @"Incidents.csv";
@@ -86,10 +66,10 @@ namespace Socrata
             revision.AwaitCompletion(status => Console.WriteLine(status));
         }
 
-        [Test, Order(6)]
+        [Test]
         public void TestDSMAPIStreamingWorkflowWithCSV()
         {
-            Resource resource = socrataClient.GetResource("tzmz-8bnb");
+            Resource resource = socrataClient.GetResource("ktqn-wumg");
             Revision revision = resource.OpenRevision(RevisionType.REPLACE);
             Source source = revision.CreateStreamingSource("test-csv.csv");
             ByteSink sink = source.StreamingSource(ContentType.CSV);
@@ -101,10 +81,10 @@ namespace Socrata
             revision.AwaitCompletion(status => Console.WriteLine(status));
         }
         
-        [Test, Order(7)]
+        [Test]
         public void TestDSMAPIErrorRowsWorkflowWithCSV()
         {
-            Resource resource = this.socrataClient.GetResource("tzmz-8bnb");
+            Resource resource = this.socrataClient.GetResource("wbmr-uf9s");
             Revision revision = resource.OpenRevision(RevisionType.REPLACE);
             Source source = revision.CreateStreamingSource("test-csv.csv");
             ByteSink sink = source.StreamingSource(ContentType.CSV);
@@ -122,7 +102,7 @@ namespace Socrata
             revision.AwaitCompletion(status => Console.WriteLine(status));
         }
 
-        [Test, Order(8)]
+        [Test]
         public void TestDSMAPIUpdateWorkflowWithCSV()
         {
             Resource resource = socrataClient.GetResource("tzmz-8bnb");
@@ -135,7 +115,7 @@ namespace Socrata
             revision.AwaitCompletion(status => Console.WriteLine(status));
         }
         
-        [Test, Order(9)]
+        [Test]
         public void TestDSMAPIChangeOutputSchema()
         {
             DsmapiResourceBuilder builder = socrataClient.CreateDsmapiResourceBuilder("ToDelete");
