@@ -3,6 +3,7 @@ using NUnit.Compatibility;
 using System;
 using Socrata.DSMAPI;
 using Socrata.SODA;
+using Socrata.ActivityLog;
 using Socrata.SODA.Schema;
 using System.Collections.Generic;
 
@@ -75,6 +76,17 @@ namespace Socrata
             List<DomainResource> resources = socrataClient.GetResources();
             Console.WriteLine(resources.Count);
             Assert.IsTrue(resources.Count > 101);
+        }
+
+        [Test]
+        public void GetLatestDomainActivityLog()
+        {
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            List<ActivityLogModel> activities = socrataClient.GetLatestActivityLog();
+            Assert.IsTrue(activities.Count > 100);
+            ActivityLogFetcher alf = new ActivityLogFetcher(socrataClient.httpClient);
+            List<ActivityLogModel> none = alf.FetchByUserEmail("fake@fake.com");
+            Assert.IsTrue(none.Count == 0);
         }
     }
 }

@@ -18,6 +18,16 @@ Socrata Resources
 ```c#
 // Get a resource by its ID*
 Resource dataset = client.GetResource("abcd-1234");
+
+// Get all resources on a domain
+List<DomainResource> resources = socrataClient.GetResources();
+resources.ForEach((resource) => { System.Console.WriteLine(resource.Id) });
+
+// Get Latest Activity Log on the Domain
+List<ActivityLogModel> activities = socrataClient.GetLatestActivityLog();
+activities.ForEach((activity) => {
+    Console.WriteLine(activity.ActivityType);
+});
 ```
 ***Note***
 [Dataset IDs](https://support.socrata.com/hc/en-us/articles/202950258-What-is-a-Dataset-UID-or-a-Dataset-4x4-)

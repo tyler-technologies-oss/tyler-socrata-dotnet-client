@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Socrata
 {
     using Socrata.HTTP;
+    using Socrata.ActivityLog;
     public class SocrataClient : ISocrataClient
     {
         public SocrataHttpClient httpClient { get; internal set; }
@@ -55,5 +56,12 @@ namespace Socrata
             res.ForEach((resource) => resources.Add(resource.Resource));
             return resources;
         }
+
+        public List<ActivityLogModel> GetLatestActivityLog(long offset = 0, long limit = 1000)
+        {
+            ActivityLogFetcher al = new ActivityLogFetcher(this.httpClient);
+            return al.FetchLatest(offset, limit);
+        }
+
     }
 }
