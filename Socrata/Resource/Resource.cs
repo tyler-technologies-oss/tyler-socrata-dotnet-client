@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using System.Linq;
 using Socrata.Abstractions;
 using System.Threading;
-using System.Reflection;
-using NUnit.Framework;
 using Socrata.HTTP;
 using Socrata.DSMAPI;
 using Socrata.SODA;

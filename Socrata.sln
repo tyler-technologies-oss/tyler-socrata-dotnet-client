@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.808.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socrata", "Socrata\Socrata.csproj", "{3EF10130-3324-4A28-A3BA-99D367003181}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Socrata.Tests", "Socrata.Tests\Socrata.Tests.csproj", "{69CD665D-E2A1-4CE0-95BE-0EC1EBA3AD69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3EF10130-3324-4A28-A3BA-99D367003181}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EF10130-3324-4A28-A3BA-99D367003181}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EF10130-3324-4A28-A3BA-99D367003181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69CD665D-E2A1-4CE0-95BE-0EC1EBA3AD69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69CD665D-E2A1-4CE0-95BE-0EC1EBA3AD69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69CD665D-E2A1-4CE0-95BE-0EC1EBA3AD69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69CD665D-E2A1-4CE0-95BE-0EC1EBA3AD69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
