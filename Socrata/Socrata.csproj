@@ -7,7 +7,7 @@
 	
 	  <PackageId>Socrata</PackageId>
 
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
 
     <Description>Socrata .NET Client</Description>
 
@@ -25,9 +25,6 @@
 
 
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
