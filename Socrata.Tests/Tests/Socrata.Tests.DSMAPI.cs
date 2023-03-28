@@ -94,7 +94,7 @@ namespace Socrata
             if(source.HasErrorRows())
             {
                 string errorFile = "ErrorRows.csv";
-                int numberOfErrors = source.NumberOfErrors();
+                long numberOfErrors = source.NumberOfErrors();
                 Console.WriteLine($"{numberOfErrors} error(s) found");
                 source.ExportErrorRows(errorFile);
             }

@@ -33,7 +33,7 @@ namespace Socrata.DSMAPI
         /// Revision Sequence
         /// </summary>
         [DataMember(Name = "revision_seq")]
-        public int RevisionSeq { get; internal set; }
+        public long RevisionSeq { get; internal set; }
 
         /// <summary>
         /// metadata
@@ -45,7 +45,7 @@ namespace Socrata.DSMAPI
         /// id
         /// </summary>
         [DataMember(Name = "id")]
-        public int Id { get; internal set; }
+        public long Id { get; internal set; }
 
         /// <summary>
         /// href
@@ -63,7 +63,7 @@ namespace Socrata.DSMAPI
         /// domain_id
         /// </summary>
         [DataMember(Name = "domain_id")]
-        public int DomainId { get; }
+        public long DomainId { get; }
 
         /// <summary>
         /// creation_source

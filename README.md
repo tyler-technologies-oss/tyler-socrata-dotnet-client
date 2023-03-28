@@ -185,7 +185,7 @@ Dataset Management API
   if(source.HasErrorRows())
   {
     string errorFile = "C:\Path\To\ErrorRows.csv";
-    int numberOfErrors = source.NumberOfErrors();
+    long numberOfErrors = source.NumberOfErrors();
     source.ExportErrorRows(errorFile);
     throw new Exception($"{numberOfErrors} Error(s) were found in the upload");
   }

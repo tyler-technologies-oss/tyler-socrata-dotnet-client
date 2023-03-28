@@ -1,8 +1,5 @@
 using NUnit.Framework;
-using NUnit.Compatibility;
 using System;
-using Socrata.DSMAPI;
-using Socrata.SODA;
 using Socrata.ActivityLog;
 using Socrata.SODA.Schema;
 using System.Collections.Generic;

@@ -10,13 +10,13 @@ namespace Socrata.DSMAPI
         /// The amount of parallelism supported by the ByteSink
         ///</summary>
         [DataMember(Name="preferred_upload_parallelism")]
-        public int PreferredParallelism { get; internal set; }
+        public long PreferredParallelism { get; internal set; }
 
         /// <summary>
         /// The preferred chunk size of each
         ///</summary>
         [DataMember(Name="preferred_chunk_size")]
-        public int PreferredChunkSize { get; internal set; }
+        public long PreferredChunkSize { get; internal set; }
 
     }
 }

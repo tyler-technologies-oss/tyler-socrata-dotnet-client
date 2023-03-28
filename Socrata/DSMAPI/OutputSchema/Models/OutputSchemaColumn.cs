@@ -18,7 +18,7 @@ namespace Socrata.DSMAPI
         /// position
         ///</summary>
         [DataMember(Name="position")]
-        public int Position { get; set; }
+        public long Position { get; set; }
 
         /// <summary>
         /// is_primary_key
@@ -30,13 +30,13 @@ namespace Socrata.DSMAPI
         /// initial_output_column_id
         ///</summary>
         [DataMember(Name="initial_output_column_id")]
-        public int? InitialOutputColumnId { get; set; }
+        public long? InitialOutputColumnId { get; set; }
 
         /// <summary>
         /// id
         ///</summary>
         [DataMember(Name="id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// format

@@ -9,22 +9,22 @@ namespace Socrata.SODA
         /// Gets or sets the name of the Resource that this ResourceMetadata describes.
         /// </summary>
         [DataMember(Name = "Rows Updated")]
-        public int Updated { get; private set; }
+        public long Updated { get; private set; }
 
         /// <summary>
         /// Gets or sets the name of the Resource that this ResourceMetadata describes.
         /// </summary>
         [DataMember(Name = "Rows Created")]
-        public int Created { get; private set; }
+        public long Created { get; private set; }
 
         /// <summary>
         /// Gets or sets the name of the Resource that this ResourceMetadata describes.
         /// </summary>
         [DataMember(Name = "Rows Deleted")]
-        public int Deleted { get; private set; }
+        public long Deleted { get; private set; }
 
         [DataMember(Name = "Errors")]
-        public int Errors { get; private set; }
+        public long Errors { get; private set; }
 
         /// Gets the explanatory text about this result.
         /// </summary>

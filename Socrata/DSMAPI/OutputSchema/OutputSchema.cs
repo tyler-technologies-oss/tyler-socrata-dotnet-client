@@ -67,7 +67,7 @@ namespace Socrata.DSMAPI
                 if(column.DisplayName == columnName)
                 {
                     int i = osModel.OutputColumns.IndexOf(column);
-                    int colId = osModel.OutputColumns[i].Transform.Id;
+                    long colId = osModel.OutputColumns[i].Transform.Id;
                     System.Console.WriteLine(colId);
                     System.Console.WriteLine(ValidateUri);
                     ValidResult res = this.httpClient.GetJson<ValidResult>(ValidateUri.Replace("{transform_id}", colId.ToString()));

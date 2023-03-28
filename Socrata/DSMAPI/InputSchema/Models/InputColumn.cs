@@ -24,19 +24,19 @@ namespace Socrata.DSMAPI
         /// position
         ///</summary>
         [DataMember(Name="position")]
-        public int Position { get; set; }
+        public long Position { get; set; }
 
         /// <summary>
         /// input_schema_id
         ///</summary>
         [DataMember(Name="input_schema_id")]
-        public int InputSchemaId { get; set; }
+        public long InputSchemaId { get; set; }
 
         /// <summary>
         /// id
         ///</summary>
         [DataMember(Name="id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// field_name
