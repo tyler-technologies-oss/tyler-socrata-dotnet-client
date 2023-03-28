@@ -20,12 +20,12 @@ namespace Socrata.DSMAPI
         /// The amount of parallelism supported by the ByteSink
         ///</summary>
         [DataMember(Name="seq_num")]
-        public int SeqNum { get; internal set; }
+        public long SeqNum { get; internal set; }
         /// <summary>
         /// The amount of parallelism supported by the ByteSink
         ///</summary>
         [DataMember(Name="end_byte_offset")]
-        public int EndByteOffset { get; internal set; }
+        public long EndByteOffset { get; internal set; }
     }
 
 }

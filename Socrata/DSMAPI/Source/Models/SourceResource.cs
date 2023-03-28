@@ -67,7 +67,7 @@ namespace Socrata.DSMAPI
         ///</summary>
         [DataMember(Name="filesize")]
 
-        public int? Filesize { get; internal set; }
+        public long? Filesize { get; internal set; }
 
         /// <summary>
         /// failure_details

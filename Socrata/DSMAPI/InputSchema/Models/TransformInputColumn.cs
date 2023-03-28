@@ -11,6 +11,6 @@ namespace Socrata.DSMAPI
         /// input_column_id
         ///</summary>
         [DataMember(Name="input_column_id")]
-        public int InputColumnId  { get; set; }
+        public long InputColumnId  { get; set; }
     }
 }

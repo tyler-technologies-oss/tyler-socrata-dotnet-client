@@ -10,12 +10,12 @@ namespace Socrata.DSMAPI
         /// line
         ///</summary>
         [DataMember(Name="line")]
-        public int line { get; set; }
+        public long line { get; set; }
 
         /// <summary>
         /// column
         ///</summary>
         [DataMember(Name="column")]
-        public int Column { get; set; }
+        public long Column { get; set; }
     }
 }

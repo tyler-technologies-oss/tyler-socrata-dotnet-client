@@ -36,7 +36,7 @@ namespace Socrata.DSMAPI
         /// id
         ///</summary>
         [DataMember(Name="id")]
-        public int Id { get; internal set; }
+        public long Id { get; internal set; }
 
         /// <summary>
         /// has_cell_edits
@@ -66,7 +66,7 @@ namespace Socrata.DSMAPI
         /// error_count
         ///</summary>
         [DataMember(Name="error_count")]
-        public int? ErrorCount  { get; set; }
+        public long? ErrorCount  { get; set; }
 
         /// <summary>
         /// completed_at
@@ -78,6 +78,6 @@ namespace Socrata.DSMAPI
         /// attempts
         ///</summary>
         [DataMember(Name="attempts")]
-        public int Attempts  { get; }
+        public long Attempts  { get; }
     }
 }

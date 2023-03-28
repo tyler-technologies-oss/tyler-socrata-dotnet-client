@@ -13,7 +13,7 @@ namespace Socrata.DSMAPI
         /// total_rows
         ///</summary>
         [DataMember(Name="total_rows")]
-        public int TotalRows { get; }
+        public long TotalRows { get; }
         
         /// <summary>
         /// output_schemas
@@ -30,7 +30,7 @@ namespace Socrata.DSMAPI
         /// num_row_errors
         ///</summary>
         [DataMember(Name="num_row_errors")]
-        public int NumRowErrors { get; }
+        public long NumRowErrors { get; }
 
         /// <summary>
         /// name
@@ -48,7 +48,7 @@ namespace Socrata.DSMAPI
         /// id
         ///</summary>
         [DataMember(Name="id")]
-        public int Id { get; internal set; }
+        public long Id { get; internal set; }
 
         /// <summary>
         /// created_by

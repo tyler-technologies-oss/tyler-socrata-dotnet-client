@@ -5,9 +5,9 @@ namespace Socrata.DSMAPI {
     using Socrata.HTTP;
     public class ByteSink {
         private SocrataHttpClient httpClient;
-        private int preferred_chunk_size;
-        private int seq_num = 0;
-        private int byte_offset = 0;
+        private long preferred_chunk_size;
+        private long seq_num = 0;
+        private long byte_offset = 0;
         private string chunkUri;
         public ByteSink(SocrataHttpClient httpClient, string chunkUri, InitiateResponse chunkInfo)
         {

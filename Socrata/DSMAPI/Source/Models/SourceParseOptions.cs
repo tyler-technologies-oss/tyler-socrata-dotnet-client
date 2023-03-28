@@ -36,7 +36,7 @@ namespace Socrata.DSMAPI
         /// header_count
         ///</summary>
         [DataMember(Name="header_count")]
-        public int HeaderCount { get; set; }
+        public long HeaderCount { get; set; }
 
         /// <summary>
         /// encoding
@@ -54,7 +54,7 @@ namespace Socrata.DSMAPI
         /// column_header
         ///</summary>
         [DataMember(Name="column_header")]
-        public int ColumnHeader { get; set; }
+        public long ColumnHeader { get; set; }
 
     }
 }
