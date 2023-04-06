@@ -19,6 +19,9 @@ Socrata Resources
 // Get a resource by its ID*
 Resource dataset = client.GetResource("abcd-1234");
 
+// Get a resource by its Resource ID Alias*
+Resource dataset = client.GetResourceByAlias("transaction_amounts");
+
 // Get all resources on a domain
 List<DomainResource> resources = socrataClient.GetResources();
 resources.ForEach((resource) => { System.Console.WriteLine(resource.Id) });
@@ -63,13 +66,21 @@ Creating a Resource
   initialRevision.Apply();
   initialRevision.AwaitCompletion(status => Console.WriteLine(status));
   Resource newResource = new Resource(initialRevision.Metadata.FourFour, socrataClient.httpClient);
+
+
 // Through SODA
+  Column id = new Column("id", SocrataDataType.TEXT);
   SODASchema schema = new SchemaBuilder()
-      .AddColumn(new Column("Text", SocrataDataType.TEXT))
-      .AddColumn(new Column("Date", SocrataDataType.DATETIME, "Data Column Description"))
+      .AddColumn(id)
+      .AddColumn(new Column("text", SocrataDataType.TEXT))
+      .AddColumn(new Column("number", SocrataDataType.NUMBER))
+      .AddColumn(new Column("point", SocrataDataType.POINT))
+      .AddColumn(new Column("date", SocrataDataType.DATETIME, "Data Column Description"))
+      .AddColumn(new Column("bool", SocrataDataType.BOOLEAN))
       .Build();
-  Resource newDataset = socrataClient.CreateSodaResourceBuilder("ToDelete")
+  Resource newDataset = socrataClient.CreateSodaResourceBuilder("My New Dataset")
       .SetSchema(schema)
+      .SetRowIdentifier(id)
       .Build();
 ```
 

@@ -15,19 +15,58 @@ namespace Socrata
         /* SODA IT TESTS */
         /*****************/
         SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-        // [Test]
+        [Test]
         public void CreateDataset()
         {
             SODASchema schema = new SchemaBuilder()
-                .AddColumn(new Column("Text", SocrataDataType.TEXT))
-                .AddColumn(new Column("Number", SocrataDataType.NUMBER))
-                .AddColumn(new Column("Point", SocrataDataType.POINT))
-                .AddColumn(new Column("Date", SocrataDataType.DATETIME, "Data Column Description"))
-                .AddColumn(new Column("Bool", SocrataDataType.BOOLEAN))
+                .AddColumn(new Column("text", SocrataDataType.TEXT))
+                .AddColumn(new Column("number", SocrataDataType.NUMBER))
+                .AddColumn(new Column("point", SocrataDataType.POINT))
+                .AddColumn(new Column("date", SocrataDataType.DATETIME, "Data Column Description"))
+                .AddColumn(new Column("bool", SocrataDataType.BOOLEAN))
                 .Build();
             Resource newDataset = socrataClient.CreateSodaResourceBuilder("ToDelete")
                 .SetSchema(schema)
                 .Build();
+            // Clean it up
+            newDataset.Delete();
+        }
+
+        [Test]
+        public void CreateDatasetWithRowIdentifier()
+        {
+            Column id = new Column("id", SocrataDataType.TEXT);
+            SODASchema schema = new SchemaBuilder()
+                .AddColumn(id)
+                .AddColumn(new Column("text", SocrataDataType.TEXT))
+                .AddColumn(new Column("number", SocrataDataType.NUMBER))
+                .AddColumn(new Column("point", SocrataDataType.POINT))
+                .AddColumn(new Column("date", SocrataDataType.DATETIME, "Data Column Description"))
+                .AddColumn(new Column("bool", SocrataDataType.BOOLEAN))
+                .Build();
+            Resource newDataset = socrataClient.CreateSodaResourceBuilder("ToDelete")
+                .SetSchema(schema)
+                .SetRowIdentifier(id)
+                .Build();
+            // Clean it up
+            newDataset.Delete();
+        }
+
+        [Test]
+        public void CreateDatasetWithResourceAlias()
+        {
+            string alias = "to_delete";
+            SODASchema schema = new SchemaBuilder()
+                .AddColumn(new Column("text", SocrataDataType.TEXT))
+                .AddColumn(new Column("number", SocrataDataType.NUMBER))
+                .AddColumn(new Column("point", SocrataDataType.POINT))
+                .AddColumn(new Column("date", SocrataDataType.DATETIME, "Data Column Description"))
+                .AddColumn(new Column("bool", SocrataDataType.BOOLEAN))
+                .Build();
+            Resource newDataset = socrataClient.CreateSodaResourceBuilder("To Delete")
+                .SetSchema(schema)
+                .Build();
+            newDataset.SetResourceIdAlias(alias);
             // Clean it up
             newDataset.Delete();
         }

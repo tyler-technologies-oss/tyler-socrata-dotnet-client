@@ -45,6 +45,15 @@ namespace Socrata
         }
 
         /// <summary>
+        /// Delete the resource. This will delete the asset on Socrata,
+        /// so please be careful calling this.
+        /// </summary>
+        public Result SetResourceIdAlias(string alias)
+        {
+            return httpClient.PutJson<Result>("/api/views/" + this.Id + ".json", new Dictionary<string, string>{{"resourceName", alias}});
+        }
+
+        /// <summary>
         /// Test whether the given dataset ID is a valid id
         /// </summary>
         private Boolean ValidId(string id) => !String.IsNullOrEmpty(id) && idRegex.IsMatch(id);
