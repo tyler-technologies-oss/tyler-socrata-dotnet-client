@@ -84,6 +84,42 @@ Creating a Resource
       .Build();
 ```
 
+Creating a View
+-----
+```c#
+//// BASIC QUERIES
+// Get a resource (by ID or ALIAS)
+Resource dataset = client.GetResource("abcd-1234");
+
+string query = @"
+SELECT transaction_type, sum(amount)
+";
+
+View view = cases.CreateViewFromSoQL(query);
+
+//// Advanced Queries
+// Get a resource (by ID or ALIAS)
+Resource cases = client.GetResourceByAlias("cases");
+Resource caseoffenses = client.GetResourceByAlias("caseoffenses");
+Resource addresses = client.GetResourceByAlias("addresses");
+
+string query = @"
+SELECT casenumber, @cs.case_offense_type, @ad.centroid
+LEFT OUTER JOIN @caseoffenses as cs ON @cs.case_id = case_id
+LEFT OUTER JOIN @addresses as ad ON @ad.address_id = address_id
+";
+
+CollocationJob collocate = cases.CollocateToResources(List<Resource>{
+  caseoffenses,
+  addresses
+});
+// Run the collocation (might take a while if datasets are large)
+collocate.Run(status => Console.WriteLine(status));
+
+// Create your view
+View view = cases.CreateViewFromSoQL(query);
+```
+
 Working with Resources
 ----
 ### Data Manipulation

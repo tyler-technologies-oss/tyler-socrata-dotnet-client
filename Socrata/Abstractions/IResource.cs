@@ -10,6 +10,6 @@ namespace Socrata.Abstractions
         Rows Rows();
         Revision OpenRevision(RevisionType type);
         WorkingCopy CreateWorkingCopy();
-
+        // View CreateViewFromSoQL(string soql);
     }
 }

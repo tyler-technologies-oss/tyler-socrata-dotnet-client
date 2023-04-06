@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Socrata.Abstractions;
@@ -11,7 +11,7 @@ using Socrata.SODA.Schema;
 namespace Socrata
 {
     
-    public class Resource : IResource 
+    public class View : IView 
     {
         public string Id { get; internal set; }
         bool Deleted = false;
@@ -21,7 +21,7 @@ namespace Socrata
         public SODASchema schema;
         Regex idRegex = new Regex(@"^[a-z0-9]{4}-[a-z0-9]{4}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public Resource(string id, SocrataHttpClient httpClient)
+        public View(string id, SocrataHttpClient httpClient)
         {
             if(!ValidId(id))
                 throw new Exception("Invalid id: " + id);
@@ -110,15 +110,5 @@ namespace Socrata
         {
             return new Rows(httpClient, Id);
         }
-
-        public CollocationJob CollocateToResources(List<Resource> resources)
-        { 
-            return new CollocationJob(this, resources, httpClient);
-        }
-
-        // public Resource CreateViewFromSoQL(string soql)
-        //{ 
-        //    return new View()
-        //}
     }
 }
