@@ -30,6 +30,16 @@ namespace Socrata
         public Resource GetResource(string id) => new Resource(id, httpClient);
 
         /// <summary>
+        /// Get a Resource by its alias
+        /// this will throw a HttpRequestException if the dataset does not exist
+        /// </summary>
+        public Resource GetResourceByAlias(string alias)
+        {
+            DomainResource result = httpClient.GetJson<DomainResource>("/api/views/" + alias);
+            return new Resource(result.Id, httpClient);
+        }
+
+        /// <summary>
         /// Test to make sure the connection is valid.
         /// </summary>
         public bool ValidateConnection() => httpClient.Get("/api/users/current.json").IsSuccessStatusCode;

@@ -11,6 +11,7 @@ namespace Socrata
         string name { get; set; }
         string description;
         SODASchema Schema;
+        string PrimaryKey = null;
         SocrataHttpClient httpClient;
         public SodaResourceBuilder(string name, SocrataHttpClient httpClient)
         {
@@ -36,6 +37,11 @@ namespace Socrata
                 { "category", null },
                 { "tags", null }
             };
+            if(!string.IsNullOrEmpty(this.PrimaryKey))
+            {
+                // Add the Row Identifier if it is set
+                d.Add("metadata", new Dictionary<string, string>{ {"rowIdentifier", this.PrimaryKey } });
+            }
             var jsonString = JsonConvert.SerializeObject(
                 d, Formatting.Indented,
                 new JsonConverter[] {new StringEnumConverter()});
@@ -49,6 +55,16 @@ namespace Socrata
             this.Schema = schema;
             return this;
         }
+
+        /// <summary>
+        /// Set the Row Identifier (basically the Primary Key) of the dataset
+        /// </summary>
+        public SodaResourceBuilder SetRowIdentifier(Column column)
+        {
+            this.PrimaryKey = column.columnName;
+            return this;
+        }
+
         private string Create()
         {
             var t = this.ResourceJson();

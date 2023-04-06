@@ -67,6 +67,23 @@ namespace Socrata
         }
 
         [Test]
+        [ExpectedException(typeof(System.Net.Http.HttpRequestException))]
+        public void ExpectNotToFindAlias()
+        {
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            Resource resource = socrataClient.GetResourceByAlias("does_not_exist");
+        }
+
+        [Test]
+        public void ExpectToFindAlias()
+        {
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            Resource resource = socrataClient.GetResourceByAlias("test_fixture");
+            long rows = resource.Rows().Count();
+            Assert.AreEqual(rows, 0);
+        }
+
+        [Test]
         public void GetResourcesForDomain()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
