@@ -81,7 +81,7 @@ namespace Socrata
             revisionType.Add("config", config);
             RevisionResponse revisionResponse = 
                 httpClient.PostJson<RevisionResponse>("/api/publishing/v1/revision/" + this.Id, revisionType);
-            return new Revision(httpClient, revisionResponse);;
+            return new Revision(httpClient, revisionResponse);
         }
 
 
@@ -111,14 +111,39 @@ namespace Socrata
             return new Rows(httpClient, Id);
         }
 
+        /// <summary>
+        /// Create a Collocation Job to run.
+        /// Collocations can take a minute, so the run task must be awaited
+        /// </summary>
         public CollocationJob CollocateToResources(List<Resource> resources)
         { 
             return new CollocationJob(this, resources, httpClient);
         }
 
-        // public Resource CreateViewFromSoQL(string soql)
-        //{ 
-        //    return new View()
-        //}
+        /// <summary>
+        /// Given a SoQL query, create a view.
+        /// NOTE: `SELECT *` is not permitted in this interface
+        /// </summary>
+        public View CreateViewFromSoQL(string name, string soql, AudienceLevel audienceLevel)
+        { 
+            View view = new View(this, httpClient, name, soql, audienceLevel);
+            return view.Create();
+        }
+        public View CreateViewFromSoQL(string name, string soql)
+        {
+            return CreateViewFromSoQL(name, soql, AudienceLevel.PRIVATE);
+        }
+
+        /// <summary>
+        /// Set the resource audience, one of AudienceLevel:
+        /// PRIVATE, INTERNAL, PUBLIC
+        /// </summary>
+        public void SetAudience(AudienceLevel audienceLevel)
+        {
+            Dictionary<string, string> permissions = new Dictionary<string, string>{
+                    {"scope", audienceLevel.Value}
+            };
+            httpClient.PutJson<Result>("/api/views/" + Id + "/permissions", permissions);
+        }
     }
 }

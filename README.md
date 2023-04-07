@@ -66,6 +66,13 @@ Creating a Resource
   initialRevision.Apply();
   initialRevision.AwaitCompletion(status => Console.WriteLine(status));
   Resource newResource = new Resource(initialRevision.Metadata.FourFour, socrataClient.httpClient);
+  // Optionally set the Resource Alias - this allows you to refer to the dataset
+  // later by this alias without knowing the dataset ID
+  // Aliases MUST be lower case, alphanumeric + `-` and `_` , unique to that domain
+  newResource.SetResourceIdAlias("to_delete")
+
+  // Optionally set the permission level of the resource - by default they are created as PRIVATE assets
+  newResource.SetAudience(AudienceLevel.INTERNAL);
 
 
 // Through SODA
@@ -82,10 +89,20 @@ Creating a Resource
       .SetSchema(schema)
       .SetRowIdentifier(id)
       .Build();
+  // Optionally set the Resource Alias - this allows you to refer to the dataset
+  // later by this alias without knowing the dataset ID
+  // Aliases MUST be lower case, alphanumeric + `-` and `_` , unique to that domain
+  newDataset.SetResourceIdAlias("my_new_dataset")
+  // Optionally set the permission level of the resource - by default they are created as PRIVATE assets
+  newDataset.SetAudience(AudienceLevel.INTERNAL);
+
 ```
 
 Creating a View
 -----
+*NOTE* When creating a SoQL View, some known query patterns are currently not supported. In particular:
+- `SELECT *` is not permitted, columns must be explicitly referenced
+
 ```c#
 //// BASIC QUERIES
 // Get a resource (by ID or ALIAS)
@@ -122,6 +139,27 @@ View view = cases.CreateViewFromSoQL(query);
 
 Working with Resources
 ----
+### Permissions
+Permissions are managed at the view or resource level.
+```c#
+// Audience Levels:
+// AudienceLevel.PRIVATE = private asset, only available to roled domain managers, dataset owner, and administrators
+// AudienceLevel.INTERNAL = internally private to the site, only available to roled users on the domain
+// AudienceLevel.PUBLIC = externally public, *NOTE* on most sites the asset will need to be APPROVED in order to be made public
+
+// Private assets can have private, internal, and public views.
+
+// Get the Resource
+Resource resource = socrataClient.GetResournce("abcd-1234");
+// Change its Audience Level
+resource.SetAudience(AudienceLevel.PRIVATE);
+
+// Create an internal view
+View view = resource.CreateViewFromSoQL("view", "SELECT id", AudienceLevel.INTERNAL);
+// Optionally, change the view after the fact
+view.SetAudience(AudienceLevel.PRIVATE);
+
+```
 ### Data Manipulation
 #### Socrata Data Types and You
 | Socrata Data Type | Rough SQL Mapping | Example |
