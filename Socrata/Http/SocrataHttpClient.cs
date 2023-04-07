@@ -29,7 +29,11 @@ namespace Socrata.HTTP
             var resp = httpClient.SendAsync(httpRequestMessage).Result;
             // Console.WriteLine(resp.Content.ReadAsStringAsync().Result);
             if(!dangerously) {
-                resp.EnsureSuccessStatusCode();
+                if(!resp.IsSuccessStatusCode)
+                {
+                    Console.WriteLine(resp.Content.ReadAsStringAsync().Result);
+                    resp.EnsureSuccessStatusCode();
+                }
             }
             return resp;
         }
