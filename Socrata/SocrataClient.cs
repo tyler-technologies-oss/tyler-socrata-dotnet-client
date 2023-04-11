@@ -6,6 +6,8 @@ namespace Socrata
 {
     using Socrata.HTTP;
     using Socrata.ActivityLog;
+    using System.Net.Http;
+
     public class SocrataClient : ISocrataClient
     {
         public SocrataHttpClient httpClient { get; internal set; }
@@ -30,13 +32,26 @@ namespace Socrata
         public Resource GetResource(string id) => new Resource(id, httpClient);
 
         /// <summary>
-        /// Get a Resource by its alias
-        /// this will throw a HttpRequestException if the dataset does not exist
+        /// Get a Resource by its alias, returns `null` if resource does not exist
         /// </summary>
         public Resource GetResourceByAlias(string alias)
         {
-            DomainResource result = httpClient.GetJson<DomainResource>("/api/views/" + alias);
-            return new Resource(result.Id, httpClient);
+            try 
+            {
+                DomainResource result = httpClient.GetJson<DomainResource>("/api/views/" + alias);
+                return new Resource(result.Id, httpClient);
+            } 
+            catch (HttpRequestException)
+            {
+                Console.WriteLine("Resource " + alias + " was not found on " + httpClient.host.ToString());
+                return null;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            } 
+
         }
 
         /// <summary>
