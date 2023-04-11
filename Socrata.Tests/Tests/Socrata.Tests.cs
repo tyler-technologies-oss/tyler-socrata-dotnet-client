@@ -67,11 +67,11 @@ namespace Socrata
         }
 
         [Test]
-        [ExpectedException(typeof(System.Net.Http.HttpRequestException))]
         public void ExpectNotToFindAlias()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Resource resource = socrataClient.GetResourceByAlias("does_not_exist");
+            Assert.Null(resource);
         }
 
         [Test]

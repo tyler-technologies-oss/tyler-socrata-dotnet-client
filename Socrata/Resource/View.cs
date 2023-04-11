@@ -78,6 +78,8 @@ namespace Socrata
             string apply_endpoint = revision.Links.Apply;
             httpClient.PutEmpty<RevisionResponse>(apply_endpoint);
             this.Id = revision.Resource.FourFour;
+            this.metadata = httpClient.GetJson<ResourceMetadata>("/api/views/"+this.Id+".json");
+            this.schema = new SchemaBuilder().BuildFromResourceMetadata(this.metadata.Columns).Build();
             return this;
         }
         
