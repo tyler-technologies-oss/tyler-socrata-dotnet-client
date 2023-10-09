@@ -7,7 +7,7 @@
 	
 	  <PackageId>Socrata</PackageId>
 
-    <Version>2.2.0</Version>
+    <Version>2.3.0</Version>
 
     <Description>Socrata .NET Client</Description>
 
