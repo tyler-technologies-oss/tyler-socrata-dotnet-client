@@ -145,5 +145,48 @@ namespace Socrata
             };
             httpClient.PutJson<Result>("/api/views/" + Id + "/permissions", permissions);
         }
+
+        /// <summary>
+        /// Get the schedule attached to the resource
+        /// or an HttpError if no schedule is present.
+        /// </summary>
+        public Schedule GetSchedule() 
+        {
+            Schedule datasetSchedule = httpClient.GetJson<Schedule>("/api/publishing/v1/schedule/" + Id);
+            return datasetSchedule;
+        }
+
+        public Schedule CreateSchedule(ScheduleResource newSchedule)
+        {
+            Dictionary<string, object> newScheduleJson = new Dictionary<string, object> {
+                {"paused", newSchedule.Paused},
+                {"cadence", newSchedule.Cadence},
+                {"action", newSchedule.Action}
+            };
+            Schedule newDatasetSchedule = httpClient.PostJson<Schedule>(
+                "/api/publishing/v1/schedule/" + Id,
+                newScheduleJson
+            );
+            return newDatasetSchedule;
+        }
+
+        public Schedule UpdateSchedule(ScheduleResource newSchedule)
+        {
+            Dictionary<string, object> newScheduleJson = new Dictionary<string, object> {
+                {"paused", newSchedule.Paused},
+                {"cadence", newSchedule.Cadence},
+                {"action", newSchedule.Action}
+            };
+            Schedule newDatasetSchedule = httpClient.PutJson<Schedule>(
+                "/api/publishing/v1/schedule/" + Id,
+                newScheduleJson
+            );
+            return newDatasetSchedule;
+        }
+
+        public void DeleteSchedule()
+        {
+            httpClient.Delete<Schedule>("/api/publishing/v1/schedule/" + Id);
+        }
     }
 }

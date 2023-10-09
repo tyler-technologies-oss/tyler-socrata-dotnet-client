@@ -11,6 +11,12 @@ ISocrataClient client = new SocrataClient(new Uri("https://{domain}.data.socrata
 
 // Optionally validate the client connection
 bool IsValidConnection = client.ValidateConnection();
+
+// Listing all schedules on a domain
+List<Schedule> allSchedules = client.GetSchedules();
+
+// Listing all Gateway agents on a domain
+List<Agent> allAgents = client.GetAgents();
 ```
 
 Socrata Resources
@@ -159,6 +165,42 @@ View view = resource.CreateViewFromSoQL("view", "SELECT id", AudienceLevel.INTER
 // Optionally, change the view after the fact
 view.SetAudience(AudienceLevel.PRIVATE);
 
+```
+
+### Scheduling A Resource
+```c#
+Resource resource = socrataClient.GetResournce("abcd-1234");
+// Get Existing Schedule
+Schedule schedule = resource.GetSchedule()
+// ==> Results in an HTTP Error if no schedule exists
+
+// New Schedules
+ScheduleResource newSchedule = new ScheduleResource
+            {
+                Paused = false,
+                Cadence = new ScheduleCadence {
+                    Cron = "0 9 * * *",
+                    Timezone = "America/New_York"
+                },
+                Action = new ScheduleAction {
+                    Type = "connection_agent",
+                    Parameters = new ScheduleParameters {
+                        AgentUid = "1234-abcd-lmno-9876",
+                        Parameters = new Dictionary<string, string> {},
+                        Path = new List<string> {},
+                        Namespace = new ScheduleAgentNamespace {
+                            Type = "csv",
+                            Name = "CSV Plugin"
+                        }
+                    }
+                }
+            };
+resource.CreateSchedule(newSchedule);
+// Updating Existing Schedules
+newSchedule.Paused = true; // This will pause the schedule
+resource.UpdateSchedule(newSchedule);
+// Deleting a schedule
+resource.DeleteSchedule();
 ```
 ### Data Manipulation
 #### Socrata Data Types and You

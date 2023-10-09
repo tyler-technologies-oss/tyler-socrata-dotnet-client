@@ -88,5 +88,15 @@ namespace Socrata
             return al.FetchLatest(offset, limit);
         }
 
+        public List<Schedule> GetSchedules()
+        {
+            return httpClient.GetJson<List<Schedule>>("/api/publishing/v1/schedule");
+        }
+
+        public List<Agent> GetAgents()
+        {
+            return httpClient.GetJson<List<Agent>>("/api/publishing/v1/connection_agent");
+        }
+
     }
 }

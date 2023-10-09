@@ -3,6 +3,8 @@ using System;
 using Socrata.ActivityLog;
 using Socrata.SODA.Schema;
 using System.Collections.Generic;
+using System.Net.Http;
+
 
 namespace Socrata
 {
@@ -129,6 +131,58 @@ namespace Socrata
             a.Delete();
             b.Delete();
             c.Delete();
+        }
+
+        [Test]
+        public void ListSchedulesTest()
+        {
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            socrataClient.GetSchedules();
+        }
+
+        [Test]
+        [ExpectedException(typeof(HttpRequestException))]
+        public void noScheduleResultsInError()
+        {
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            Resource resource = socrataClient.GetResourceByAlias("test_fixture");
+            resource.GetSchedule();
+        }
+
+        [Test]
+        public void getScheduleTest()
+        {
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            Resource resource = socrataClient.GetResourceByAlias("vc4g-8aqx");
+            resource.GetSchedule();
+        }
+
+        [Test]
+        public void DeleteAndCreateScheduleTest()
+        {
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            Resource resource = socrataClient.GetResourceByAlias("edem-28vu");
+            Schedule oldSchedule = resource.GetSchedule();
+            resource.DeleteSchedule();
+            resource.CreateSchedule(oldSchedule.Resource);
+        }
+
+        [Test]
+        public void updateScheduleTest()
+        {
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            Resource resource = socrataClient.GetResourceByAlias("p6n3-fvan");
+            Schedule schedule = resource.GetSchedule();
+            schedule.Resource.Action.Parameters.Path = new List<string> { $"Test Path {System.DateTime.Now}" };
+            schedule.Resource.Paused = true;
+            resource.UpdateSchedule(schedule.Resource);
+        }
+
+        [Test]
+        public void ListAgentsTest()
+        {
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            socrataClient.GetAgents();
         }
     }
 }
