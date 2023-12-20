@@ -50,6 +50,22 @@ namespace Socrata
                 .Build();
             // Clean it up
             newDataset.Delete();
+            // Set it with a non-API Field Name compliance Column
+            Column row_id = new Column("ID", SocrataDataType.TEXT);
+            SODASchema new_schema = new SchemaBuilder()
+                .AddColumn(id)
+                .AddColumn(new Column("text", SocrataDataType.TEXT))
+                .AddColumn(new Column("number", SocrataDataType.NUMBER))
+                .AddColumn(new Column("point", SocrataDataType.POINT))
+                .AddColumn(new Column("date", SocrataDataType.DATETIME, "Data Column Description"))
+                .AddColumn(new Column("bool", SocrataDataType.BOOLEAN))
+                .Build();
+            Resource newTestDataset = socrataClient.CreateSodaResourceBuilder("ToDelete")
+                .SetSchema(new_schema)
+                .SetRowIdentifier(row_id)
+                .Build();
+            // Clean it up
+            newTestDataset.Delete();
         }
 
         [Test]
