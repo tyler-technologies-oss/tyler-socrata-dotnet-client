@@ -68,7 +68,7 @@ namespace Socrata.SODA.Schema
 
         public Column ToColumn()
         {
-            return new Column(name, SocrataDataType.Parse(dataTypeName), description, id);
+            return new Column(name, fieldName, SocrataDataType.Parse(dataTypeName), description, id);
         }
     }
 }

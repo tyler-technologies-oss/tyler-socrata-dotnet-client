@@ -61,7 +61,7 @@ namespace Socrata
         /// </summary>
         public SodaResourceBuilder SetRowIdentifier(Column column)
         {
-            this.PrimaryKey = column.columnName;
+            this.PrimaryKey = column.apiFieldName;
             return this;
         }
 
