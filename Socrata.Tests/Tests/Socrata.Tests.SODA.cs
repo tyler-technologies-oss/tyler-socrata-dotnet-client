@@ -33,6 +33,25 @@ namespace Socrata
         }
 
         [Test]
+        [ExpectedException(typeof(Exception))]
+        public void CreateFailsOnInvalidRowIdentifier()
+        {
+            Column id = new Column("id", "INVAID FIELD NAME", SocrataDataType.TEXT);
+            SODASchema schema = new SchemaBuilder()
+                .AddColumn(id)
+                .AddColumn(new Column("text", SocrataDataType.TEXT))
+                .AddColumn(new Column("number", SocrataDataType.NUMBER))
+                .AddColumn(new Column("point", SocrataDataType.POINT))
+                .AddColumn(new Column("date", SocrataDataType.DATETIME, "Data Column Description"))
+                .AddColumn(new Column("bool", SocrataDataType.BOOLEAN))
+                .Build();
+            socrataClient.CreateSodaResourceBuilder("ToDelete")
+                .SetSchema(schema)
+                .SetRowIdentifier(id)
+                .Build();
+        }
+
+        [Test]
         public void CreateDatasetWithRowIdentifier()
         {
             Column id = new Column("id", SocrataDataType.TEXT);
@@ -51,9 +70,9 @@ namespace Socrata
             // Clean it up
             newDataset.Delete();
             // Set it with a non-API Field Name compliance Column
-            Column row_id = new Column("ID", SocrataDataType.TEXT);
+            Column row_id = new Column("ID WITH SPACES", SocrataDataType.TEXT);
             SODASchema new_schema = new SchemaBuilder()
-                .AddColumn(id)
+                .AddColumn(row_id)
                 .AddColumn(new Column("text", SocrataDataType.TEXT))
                 .AddColumn(new Column("number", SocrataDataType.NUMBER))
                 .AddColumn(new Column("point", SocrataDataType.POINT))

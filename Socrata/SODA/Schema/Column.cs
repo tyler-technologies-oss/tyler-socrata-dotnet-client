@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Socrata.SODA.Schema
 {
@@ -14,6 +16,7 @@ namespace Socrata.SODA.Schema
 
         public Column(string name, string fieldName, SocrataDataType type, string description, string id)
         {
+            if (!IsFieldNameCompliant(fieldName)) throw new Exception($"{fieldName} is not a valid API field name");
             this.columnName = name;
             this.apiFieldName = fieldName;
             this.type = type;
@@ -21,9 +24,33 @@ namespace Socrata.SODA.Schema
             this.columnId = id;
             this.Metadata = null;
         }
+
+        public Column(string name, string fieldName, SocrataDataType type, string description)
+        {
+            if (!IsFieldNameCompliant(fieldName)) throw new Exception($"{fieldName} is not a valid API field name");
+            this.columnName = name;
+            this.apiFieldName = fieldName;
+            this.type = type;
+            this.description = description;
+            this.columnId = null;
+            this.Metadata = null;
+        }
+
+        public Column(string name, string fieldName, SocrataDataType type)
+        {
+            if (!IsFieldNameCompliant(fieldName)) throw new Exception($"{fieldName} is not a valid API field name");
+            this.columnName = name;
+            this.apiFieldName = fieldName;
+            this.type = type;
+            this.description = null;
+            this.columnId = null;
+            this.Metadata = null;
+        }
+
         public Column(string name, SocrataDataType type, string description)
         {
             this.columnName = name;
+            this.apiFieldName = ToApiFieldName(name);
             this.type = type;
             this.description = description;
             this.columnId = null;
@@ -32,8 +59,8 @@ namespace Socrata.SODA.Schema
 
         public Column(string name, SocrataDataType type)
         {
-            // TODO: names must be fieldName compliant
             this.columnName = name;
+            this.apiFieldName = ToApiFieldName(name);
             this.type = type;
             this.description = null;
             this.columnId = null;
@@ -67,7 +94,7 @@ namespace Socrata.SODA.Schema
             {
                 { "id", this.columnId },
                 { "name", this.columnName },
-                { "fieldName", this.columnName.ToLower() },
+                { "fieldName", this.apiFieldName },
                 { "dataTypeName", this.type.Value },
                 { "description", this.description },
             };
@@ -78,11 +105,20 @@ namespace Socrata.SODA.Schema
             return new Dictionary<string, object>
             {
                 { "name", this.columnName },
-                { "fieldName", this.columnName.ToLower() },
+                { "fieldName", this.apiFieldName },
                 { "dataTypeName", this.type.Value },
                 { "description", this.description },
             };
         }
     
+        public bool IsFieldNameCompliant(string name)
+        {
+            return !Regex.Match(name, "[^a-zA-Z0-9_]").Success;
+        }
+
+        public string ToApiFieldName(string name)
+        {
+            return Regex.Replace(name, @"[^a-zA-Z0-9]", "_").ToLower();
+        }
     }
 }
