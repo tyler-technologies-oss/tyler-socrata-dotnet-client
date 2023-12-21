@@ -13,9 +13,9 @@ jobs:
       version: ${{ steps.set_proj_version.outputs.PKG_VERSION }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 5.0.204
     - name: Install dependencies
@@ -35,7 +35,7 @@ jobs:
       run: |
         [xml]$nuspec = Get-Content Socrata\Socrata.csproj
         $version=$nuspec.project.propertygroup.version
-        Write-Output "::set-output name=PKG_VERSION::$version"
+        echo "PKG_VERSION=$version" >> $GITHUB_OUTPUT
     env:
       SODA_USERNAME: "${{ secrets.SODA_USERNAME }}"
       SODA_PASSWORD: "${{ secrets.SODA_PASSWORD }}"
@@ -49,7 +49,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Download Package artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: nupkg
       
@@ -60,7 +60,7 @@ jobs:
           nuget-version: latest
       
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 5.0.204
 
