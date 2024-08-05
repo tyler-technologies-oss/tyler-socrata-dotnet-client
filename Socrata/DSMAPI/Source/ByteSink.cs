@@ -27,6 +27,7 @@ namespace Socrata.DSMAPI {
                     resp = WriteBytes(b);
                     this.seq_num += 1;
                     this.byte_offset += b.Length;
+                    b = new byte[this.preferred_chunk_size];
                 }
             }
 

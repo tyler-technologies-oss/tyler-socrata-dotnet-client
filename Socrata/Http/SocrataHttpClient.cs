@@ -96,8 +96,15 @@ namespace Socrata.HTTP
         public T GetJson<T>(string endpoint) where T : class
         {
             var resp = Get(endpoint);
-            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(resp.Content.ReadAsStringAsync().Result);
-            return result;
+            var s = resp.Content.ReadAsStringAsync().Result;
+            try {
+                var result = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(s);
+                return result;
+            } catch (Exception e) {
+                Console.WriteLine(s);
+                return null;
+            }
+
         }
 
         public T GetJson<T>(Uri uri) where T : class
