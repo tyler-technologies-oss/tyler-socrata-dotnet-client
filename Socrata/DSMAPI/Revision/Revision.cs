@@ -21,10 +21,17 @@ namespace Socrata.DSMAPI
         }
         private SourceResponse CreateSource(Dictionary<string, string> source)
         {
-            System.Console.WriteLine(string.Join(Environment.NewLine, source));
-            Dictionary<string, object> sourceType = new Dictionary<string, object>();
-            sourceType.Add("source_type", source);
-            System.Console.WriteLine(string.Join(Environment.NewLine, sourceType));
+            Console.WriteLine(string.Join(Environment.NewLine, source));
+            Dictionary<string, object> sourceType = new Dictionary<string, object>
+            {
+                { "source_type", source }
+            };
+            Dictionary<string, bool> parseOptions = new Dictionary<string, bool>
+            {
+                { "parse_source", true }
+            };
+            sourceType.Add("parse_options", parseOptions);
+            Console.WriteLine(string.Join(Environment.NewLine, sourceType));
             SourceResponse result = HttpClient.PostJson<SourceResponse>(Links.CreateSource, sourceType);
             return result;
         }
