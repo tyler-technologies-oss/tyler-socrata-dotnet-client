@@ -121,9 +121,15 @@ namespace Socrata.DSMAPI
             while(status != "successful" && status != "failure")
             {
                 RevisionResponse req = HttpClient.GetJson<RevisionResponse>(Links.Show);
-                status = req.Resource.TaskSets[0].Status;
-                lambda(status);
-                System.Threading.Thread.Sleep(1000);
+                try {
+                    status = req.Resource.TaskSets[0].Status;
+                    lambda(status);
+                    System.Threading.Thread.Sleep(1000);
+                } catch {
+                    Console.WriteLine("WARN: Asset requires approval and cannot be published");
+                    status = "failure";
+                    lambda(status);
+                }
             }
         }
 
