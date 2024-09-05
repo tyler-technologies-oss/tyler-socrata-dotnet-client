@@ -31,7 +31,12 @@ namespace Socrata.HTTP
             if(!dangerously) {
                 if(!resp.IsSuccessStatusCode)
                 {
-                    Console.WriteLine(resp.Content.ReadAsStringAsync().Result);
+                    try {
+                        var message = resp.Content.ReadAsStringAsync().Result;
+                        Console.WriteLine(message);
+                    } catch {
+                        Console.WriteLine("No failure message provided or server returned no data");
+                    }
                     resp.EnsureSuccessStatusCode();
                 }
             }
