@@ -85,7 +85,7 @@ namespace Socrata
                     status = req.Resource.TaskSets[0].Status;
                     System.Threading.Thread.Sleep(1000);
                 } catch {
-                    Console.WriteLine("WARN: Asset requires approval and cannot be published");
+                    // TODO: Throw an exception with the view creation error
                     status = "failure";
                 }
             }
