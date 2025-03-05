@@ -1,8 +1,6 @@
 using System;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Socrata.Abstractions;
-using System.Threading;
 using Socrata.HTTP;
 using Socrata.DSMAPI;
 using Socrata.SODA;
@@ -10,7 +8,6 @@ using Socrata.SODA.Schema;
 
 namespace Socrata
 {
-    
     public class View : IView 
     {
         Resource parent;
@@ -75,8 +72,23 @@ namespace Socrata
             string update_endpoint = revision.Links.Update;
             httpClient.PutJson<RevisionResponse>(update_endpoint, permissions);
             // Apply the Revision to create
-            string apply_endpoint = revision.Links.Apply;
-            httpClient.PutEmpty<RevisionResponse>(apply_endpoint);
+            httpClient.PutEmpty<RevisionResponse>(revision.Links.Apply);
+            RevisionResponse req = httpClient.GetJson<RevisionResponse>(revision.Links.Show);
+            string status = req.Resource.TaskSets[0].Status;
+            while (status != "successful" && status != "failure")
+            {
+                req = httpClient.GetJson<RevisionResponse>(revision.Links.Show);
+                try
+                {
+                    status = req.Resource.TaskSets[0].Status;
+                    System.Threading.Thread.Sleep(5000);
+                }
+                catch
+                {
+                    Console.WriteLine("WARN: Asset requires approval and cannot be published");
+                    status = "failure";
+                }
+            }
             this.Id = revision.Resource.FourFour;
             this.metadata = httpClient.GetJson<ResourceMetadata>("/api/views/"+this.Id+".json");
             this.schema = new SchemaBuilder().BuildFromResourceMetadata(this.metadata.Columns).Build();

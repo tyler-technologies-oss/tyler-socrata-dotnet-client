@@ -1,33 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net5</TargetFramework>
-
+    <TargetFramework>net8.0</TargetFramework>
     <IsPackable>true</IsPackable>
-	
 	  <PackageId>Socrata</PackageId>
-
-    <Version>2.5.1</Version>
-
+    <Version>2.5.2</Version>
     <Description>Socrata .NET Client</Description>
-
     <RepositoryUrl>https://github.com/tyler-technologies-oss/tyler-socrata-dotnet-client</RepositoryUrl>
-
     <RepositoryType>Github</RepositoryType>
-
     <PackageTags>Socrata</PackageTags>
-
     <PackageProjectUrl>https://github.com/tyler-technologies-oss/tyler-socrata-dotnet-client</PackageProjectUrl>
-
     <PackageIcon>socrata-icon.png</PackageIcon>
   </PropertyGroup>
-
-
-
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="..\socrata-icon.png">
       <Pack>True</Pack>
