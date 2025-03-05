@@ -75,8 +75,20 @@ namespace Socrata
             string update_endpoint = revision.Links.Update;
             httpClient.PutJson<RevisionResponse>(update_endpoint, permissions);
             // Apply the Revision to create
-            string apply_endpoint = revision.Links.Apply;
-            httpClient.PutEmpty<RevisionResponse>(apply_endpoint);
+            httpClient.PutEmpty<RevisionResponse>(revision.Links.Apply);
+            RevisionResponse req = httpClient.GetJson<RevisionResponse>(revision.Links.Show);
+            string status = req.Resource.TaskSets[0].Status;
+            while(status != "successful" && status != "failure")
+            {
+                req = httpClient.GetJson<RevisionResponse>(revision.Links.Show);
+                try {
+                    status = req.Resource.TaskSets[0].Status;
+                    System.Threading.Thread.Sleep(1000);
+                } catch {
+                    // TODO: Throw an exception with the view creation error
+                    status = "failure";
+                }
+            }
             this.Id = revision.Resource.FourFour;
             this.metadata = httpClient.GetJson<ResourceMetadata>("/api/views/"+this.Id+".json");
             this.schema = new SchemaBuilder().BuildFromResourceMetadata(this.metadata.Columns).Build();
