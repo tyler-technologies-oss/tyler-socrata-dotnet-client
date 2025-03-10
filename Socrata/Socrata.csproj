@@ -3,7 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <IsPackable>true</IsPackable>
 	  <PackageId>Socrata</PackageId>
-    <Version>2.5.2</Version>
+    <Version>2.5.3</Version>
     <Description>Socrata .NET Client</Description>
     <RepositoryUrl>https://github.com/tyler-technologies-oss/tyler-socrata-dotnet-client</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
