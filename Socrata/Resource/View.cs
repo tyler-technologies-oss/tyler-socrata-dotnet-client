@@ -77,11 +77,12 @@ namespace Socrata
             string status = req.Resource.TaskSets[0].Status;
             while (status != "successful" && status != "failure")
             {
+                System.Threading.Thread.Sleep(1000);
                 req = httpClient.GetJson<RevisionResponse>(revision.Links.Show);
                 try
                 {
                     status = req.Resource.TaskSets[0].Status;
-                    System.Threading.Thread.Sleep(5000);
+                    System.Threading.Thread.Sleep(4000);
                 }
                 catch
                 {
