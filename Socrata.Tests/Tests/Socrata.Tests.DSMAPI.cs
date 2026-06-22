@@ -17,24 +17,24 @@ namespace Socrata
         // Files are in the TestFunctions folder
         [DeploymentItemAttribute("Incidents_One_Row.csv")]
 
-        // [Test]
-        // public void TestDSMAPICreate()
-        // {
-        //     DsmapiResourceBuilder builder = socrataClient.CreateDsmapiResourceBuilder("ToDelete");
-        //     Revision initialRevision = builder
-        //         .SetDescription($"{System.DateTime.Now} <b>TEST</b>")
-        //         .Build();
-        //     Source source = initialRevision.CreateUploadSource("test-csv.csv");
-        //     string filepath = @"Incidents.csv";
-        //     string csv = System.IO.File.ReadAllText(filepath);
-        //     source.AddBytesToSource(csv);
-        //     source.AwaitCompletion(status => Console.WriteLine(status));
-        //     initialRevision.Apply();
-        //     initialRevision.AwaitCompletion(status => Console.WriteLine(status));
-        //     Resource newResource = new Resource(initialRevision.Metadata.FourFour, socrataClient.httpClient);
-        //     newResource.Delete();
-        //     Assert.IsTrue(true);
-        // }
+        [Test]
+        public void TestDSMAPICreate()
+        {
+            DsmapiResourceBuilder builder = socrataClient.CreateDsmapiResourceBuilder("ToDelete");
+            Revision initialRevision = builder
+                .SetDescription($"{System.DateTime.Now} <b>TEST</b>")
+                .Build();
+            Source source = initialRevision.CreateUploadSource("test-csv.csv");
+            string filepath = @"Incidents.csv";
+            string csv = System.IO.File.ReadAllText(filepath);
+            source.AddBytesToSource(csv);
+            source.AwaitCompletion(status => Console.WriteLine(status));
+            initialRevision.Apply();
+            initialRevision.AwaitCompletion(status => Console.WriteLine(status));
+            Resource newResource = new Resource(initialRevision.Metadata.FourFour, socrataClient.httpClient);
+            newResource.Delete();
+            Assert.IsTrue(true);
+        }
 
         // [Test]
         // public void TestDSMAPIRenameViewAndSetDescription()
