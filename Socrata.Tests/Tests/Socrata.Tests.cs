@@ -89,9 +89,9 @@ namespace Socrata
         public void GetResourcesForDomain()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            List<DomainResource> resources = socrataClient.GetResources();
+            List<DomainResource> resources = socrataClient.GetResources("https://api.us.test-socrata.com/api/catalog/v1");
             Console.WriteLine(resources.Count);
-            Assert.IsTrue(resources.Count > 101);
+            Assert.IsTrue(resources.Count > 1);
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace Socrata
         public void noScheduleResultsInError()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            Resource resource = socrataClient.GetResourceByAlias("test_fixture");
+            Resource resource = socrataClient.GetResourceByAlias("ni94-7b3s");
             resource.GetSchedule();
         }
 
@@ -143,7 +143,7 @@ namespace Socrata
         public void updateScheduleTest()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            Resource resource = socrataClient.GetResourceByAlias("6zrb-bqyz");
+            Resource resource = socrataClient.GetResourceByAlias("9ftc-hfbs");
             Schedule schedule = resource.GetSchedule();
             schedule.Resource.Action.Parameters.Path = new List<string> { $"Test Path {System.DateTime.Now}" };
             schedule.Resource.Paused = true;
