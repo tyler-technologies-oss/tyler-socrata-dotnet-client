@@ -133,7 +133,7 @@ namespace Socrata
         public void DeleteAndCreateScheduleTest()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            Resource resource = socrataClient.GetResourceByAlias("edem-28vu");
+            Resource resource = socrataClient.GetResourceByAlias("9ftc-hfbs");
             Schedule oldSchedule = resource.GetSchedule();
             resource.DeleteSchedule();
             resource.CreateSchedule(oldSchedule.Resource);
