@@ -112,15 +112,6 @@ namespace Socrata
         }
 
         /// <summary>
-        /// Create a Collocation Job to run.
-        /// Collocations can take a minute, so the run task must be awaited
-        /// </summary>
-        public CollocationJob CollocateToResources(List<Resource> resources)
-        { 
-            return new CollocationJob(this, resources, httpClient);
-        }
-
-        /// <summary>
         /// Given a SoQL query, create a view.
         /// NOTE: `SELECT *` is not permitted in this interface
         /// </summary>

@@ -132,13 +132,6 @@ LEFT OUTER JOIN @caseoffenses as cs ON @cs.case_id = case_id
 LEFT OUTER JOIN @addresses as ad ON @ad.address_id = address_id
 ";
 
-CollocationJob collocate = cases.CollocateToResources(List<Resource>{
-  caseoffenses,
-  addresses
-});
-// Run the collocation (might take a while if datasets are large)
-collocate.Run(status => Console.WriteLine(status));
-
 // Create your view
 View view = cases.CreateViewFromSoQL(query);
 ```

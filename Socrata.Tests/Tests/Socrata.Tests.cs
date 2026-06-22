@@ -106,34 +106,6 @@ namespace Socrata
         }
 
         [Test]
-        public void CollocateDatasets()
-        {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            SODASchema schema = new SchemaBuilder()
-                .AddColumn(new Column("id", SocrataDataType.TEXT))
-                .Build();
-            Resource a = socrataClient.CreateSodaResourceBuilder("ToDelete")
-                .SetSchema(schema)
-                .Build();
-            Resource b = socrataClient.CreateSodaResourceBuilder("ToDelete")
-                .SetSchema(schema)
-                .Build();
-            Resource c = socrataClient.CreateSodaResourceBuilder("ToDelete")
-                .SetSchema(schema)
-                .Build();
-            List<Resource> resourcesToCollocate = new List<Resource>{
-                b,
-                c
-            };
-            CollocationJob collocate = a.CollocateToResources(resourcesToCollocate);
-            collocate.Run(status => Console.WriteLine(status));
-            // Clean up datasets
-            a.Delete();
-            b.Delete();
-            c.Delete();
-        }
-
-        [Test]
         public void ListSchedulesTest()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
