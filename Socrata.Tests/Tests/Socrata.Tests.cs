@@ -153,7 +153,7 @@ namespace Socrata
         public void getScheduleTest()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            Resource resource = socrataClient.GetResourceByAlias("vc4g-8aqx");
+            Resource resource = socrataClient.GetResourceByAlias("6zrb-bqyz");
             resource.GetSchedule();
         }
 
@@ -171,7 +171,7 @@ namespace Socrata
         public void updateScheduleTest()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            Resource resource = socrataClient.GetResourceByAlias("p6n3-fvan");
+            Resource resource = socrataClient.GetResourceByAlias("6zrb-bqyz");
             Schedule schedule = resource.GetSchedule();
             schedule.Resource.Action.Parameters.Path = new List<string> { $"Test Path {System.DateTime.Now}" };
             schedule.Resource.Paused = true;
