@@ -89,7 +89,7 @@ namespace Socrata
         public void GetResourcesForDomain()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            List<DomainResource> resources = socrataClient.GetResources("https://api.us.test-socrata.com/api/catalog/v1");
+            List<DomainResource> resources = socrataClient.GetResources("https://peter.test-socrata.com/api/catalog/v1");
             Console.WriteLine(resources.Count);
             Assert.IsTrue(resources.Count > 1);
         }
