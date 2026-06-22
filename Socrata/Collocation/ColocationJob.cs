@@ -49,7 +49,7 @@ namespace Socrata
         {
             JobStatus created = CreateColocation();
             string status = created.Status;
-            while(status != "completed" && status != "failed")
+            while(status != "completed" && status != "failed" && status != "not-needed")
             {
                 status = GetJobStatus(created.JobId).Status;
                 lambda(status);

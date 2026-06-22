@@ -14,7 +14,7 @@ namespace Socrata
         /*****************/
         /* SODA IT TESTS */
         /*****************/
-        SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+        SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
         [Test]
         public void CreateDataset()
         {
@@ -109,7 +109,7 @@ namespace Socrata
         [Test]
         public void GetSchema()
         {
-            Resource resource = socrataClient.GetResource("hpjc-drhf");
+            Resource resource = socrataClient.GetResource("p6v3-v2cj");
             SchemaBuilder schema = resource.GetSchema();
             List<Column> columns = schema.GetColumns();
             // Assert.AreEqual(columns.Count, 7);
@@ -119,14 +119,14 @@ namespace Socrata
         [Test]
         public void GetMetadata()
         {
-            Resource resource = socrataClient.GetResource("hpjc-drhf");
+            Resource resource = socrataClient.GetResource("p6v3-v2cj");
             Assert.AreEqual("Soda2 Testing", resource.metadata.Name);
         }
 
         [Test]
         public void SetMetadata()
         {
-            Resource resource = socrataClient.GetResource("hpjc-drhf");
+            Resource resource = socrataClient.GetResource("p6v3-v2cj");
             resource.metadata.Name = "New Name";
             Assert.AreEqual("New Name", resource.metadata.Name);
         }
@@ -166,7 +166,7 @@ namespace Socrata
         [Test]
         public void InsertThenUpdateThenDeleteRecord()
         {
-            Rows resource = socrataClient.GetResource("hpjc-drhf").Rows();
+            Rows resource = socrataClient.GetResource("p6v3-v2cj").Rows();
             // We first have to insert it, then update it, then delete it
             Result resInsert = resource.InsertRecord(testRecord);
             Result resUpdate = resource.UpdateRecord(testRecord);
@@ -179,7 +179,7 @@ namespace Socrata
         [Test]
         public void InsertThenUpdateThenDeleteRecords()
         {
-            Rows resource = socrataClient.GetResource("hpjc-drhf").Rows();
+            Rows resource = socrataClient.GetResource("p6v3-v2cj").Rows();
             Result resInsert = resource.InsertRecords(testRecords);
             Result resUpdate = resource.UpdateRecords(testRecords);
             Result resDelete = resource.DeleteRecords(testRecords);
@@ -191,7 +191,7 @@ namespace Socrata
         [Test]
         public void BadKeyInsertFailure()
         {
-            Rows resource = socrataClient.GetResource("hpjc-drhf").Rows();
+            Rows resource = socrataClient.GetResource("p6v3-v2cj").Rows();
             Dictionary<string, object> badKeyRecord = new Dictionary<string, object>(testRecord);
             badKeyRecord.Add("NotAKey", "NotAValue");
             Result resInsert = resource.InsertRecord(badKeyRecord);
@@ -201,7 +201,7 @@ namespace Socrata
         [Test]
         public void BadTypeInsertFailure()
         {
-            Rows resource = socrataClient.GetResource("hpjc-drhf").Rows();
+            Rows resource = socrataClient.GetResource("p6v3-v2cj").Rows();
             Result resInsert = resource.InsertRecord(badRecord);
             Console.WriteLine(resInsert.Message);
             Assert.IsTrue(resInsert.IsError);
