@@ -82,6 +82,18 @@ namespace Socrata
             return resources;
         }
 
+        /// <summary>
+        /// List all resources on the domain with an override for the catalog service
+        /// </summary>
+        public List<DomainResource> GetResources(String catalogOverride)
+        {
+            DomainResources dr = new DomainResources(httpClient);
+            List<DomainResult> res = dr.Fetch(catalogOverride);
+            List<DomainResource> resources = new List<DomainResource>();
+            res.ForEach((resource) => resources.Add(resource.Resource));
+            return resources;
+        }
+
         public List<ActivityLogModel> GetLatestActivityLog(long offset = 0, long limit = 1000)
         {
             ActivityLogFetcher al = new ActivityLogFetcher(this.httpClient);

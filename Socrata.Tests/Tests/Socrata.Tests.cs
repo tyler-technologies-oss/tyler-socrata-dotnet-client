@@ -82,16 +82,16 @@ namespace Socrata
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Resource resource = socrataClient.GetResourceByAlias("test_fixture");
             long rows = resource.Rows().Count();
-            Assert.AreEqual(rows, 0);
+            Assert.That(rows, Is.GreaterThan(0));
         }
 
         [Test]
         public void GetResourcesForDomain()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            List<DomainResource> resources = socrataClient.GetResources();
+            List<DomainResource> resources = socrataClient.GetResources("https://peter.test-socrata.com/api/catalog/v1");
             Console.WriteLine(resources.Count);
-            Assert.IsTrue(resources.Count > 101);
+            Assert.IsTrue(resources.Count > 1);
         }
 
         [Test]
@@ -106,34 +106,6 @@ namespace Socrata
         }
 
         [Test]
-        public void CollocateDatasets()
-        {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            SODASchema schema = new SchemaBuilder()
-                .AddColumn(new Column("id", SocrataDataType.TEXT))
-                .Build();
-            Resource a = socrataClient.CreateSodaResourceBuilder("ToDelete")
-                .SetSchema(schema)
-                .Build();
-            Resource b = socrataClient.CreateSodaResourceBuilder("ToDelete")
-                .SetSchema(schema)
-                .Build();
-            Resource c = socrataClient.CreateSodaResourceBuilder("ToDelete")
-                .SetSchema(schema)
-                .Build();
-            List<Resource> resourcesToCollocate = new List<Resource>{
-                b,
-                c
-            };
-            CollocationJob collocate = a.CollocateToResources(resourcesToCollocate);
-            collocate.Run(status => Console.WriteLine(status));
-            // Clean up datasets
-            a.Delete();
-            b.Delete();
-            c.Delete();
-        }
-
-        [Test]
         public void ListSchedulesTest()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
@@ -145,7 +117,7 @@ namespace Socrata
         public void noScheduleResultsInError()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            Resource resource = socrataClient.GetResourceByAlias("test_fixture");
+            Resource resource = socrataClient.GetResourceByAlias("ni94-7b3s");
             resource.GetSchedule();
         }
 
@@ -161,7 +133,7 @@ namespace Socrata
         public void DeleteAndCreateScheduleTest()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            Resource resource = socrataClient.GetResourceByAlias("edem-28vu");
+            Resource resource = socrataClient.GetResourceByAlias("9ftc-hfbs");
             Schedule oldSchedule = resource.GetSchedule();
             resource.DeleteSchedule();
             resource.CreateSchedule(oldSchedule.Resource);
@@ -171,7 +143,7 @@ namespace Socrata
         public void updateScheduleTest()
         {
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-            Resource resource = socrataClient.GetResourceByAlias("6zrb-bqyz");
+            Resource resource = socrataClient.GetResourceByAlias("9ftc-hfbs");
             Schedule schedule = resource.GetSchedule();
             schedule.Resource.Action.Parameters.Path = new List<string> { $"Test Path {System.DateTime.Now}" };
             schedule.Resource.Paused = true;

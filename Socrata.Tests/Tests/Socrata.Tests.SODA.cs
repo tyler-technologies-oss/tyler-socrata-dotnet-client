@@ -211,7 +211,7 @@ namespace Socrata
         [ExpectedException(typeof(Exception))]
         public void DiffSchema()
         {
-            Resource resource = socrataClient.GetResource("tzmz-8bnb");
+            Resource resource = socrataClient.GetResource("p6v3-v2cj");
             // TODO: Assert match
             TestSchema ts = new TestSchema();
             throw new Exception();
