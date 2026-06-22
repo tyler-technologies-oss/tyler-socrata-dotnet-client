@@ -11,8 +11,8 @@ namespace Socrata
         /******************/
         /* Consumer Tests */
         /******************/
-        SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
-        string datasetFixture = "tzmz-8bnb";
+        SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+        string datasetFixture = "gt48-4bi7";
 
         [Test]
         public void TestFetchRows()
@@ -29,7 +29,7 @@ namespace Socrata
             Resource resource = socrataClient.GetResource(datasetFixture);
             Rows rows = resource.Rows();
             List<TestJson> result = rows.FetchAll<TestJson>();
-            Assert.IsTrue(result.Count > 1000);
+            Assert.IsTrue(result.Count > 500);
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace Socrata
             Resource resource = socrataClient.GetResource(datasetFixture);
             Rows rows = resource.Rows();
             long result = rows.Count();
-            Assert.IsTrue(result > 3000);
+            Assert.IsTrue(result > 500);
         }
 
         [Test]
@@ -47,14 +47,14 @@ namespace Socrata
             Resource resource = socrataClient.GetResource(datasetFixture);
             Rows rows = resource.Rows();
             long total = rows.Count();
-            long limit = 1000;
+            long limit = 500;
             long offset = 0;
             while(offset < total)
             {
                 rows.Fetch<Dictionary<string, object>>(limit, offset);
                 offset += limit;
             }
-            Assert.AreEqual(offset, 4000);
+            Assert.AreEqual(offset, 1000);
         }
     }
 }

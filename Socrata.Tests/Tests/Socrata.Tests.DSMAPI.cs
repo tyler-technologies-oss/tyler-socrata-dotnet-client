@@ -10,7 +10,7 @@ namespace Socrata
         /*******************/
         /* DSMAPI IT TESTS */
         /*******************/
-        SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+        SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
 
         // Files are in the TestFunctions folder
         [DeploymentItemAttribute("Incidents.csv")]

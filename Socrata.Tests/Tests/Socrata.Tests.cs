@@ -35,7 +35,7 @@ namespace Socrata
         [Test]
         public void ValidateClientError()
         {
-            SocrataClient testClient = new SocrataClient(new Uri("https://opendata.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient testClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Boolean res = testClient.ValidateConnection();
             Assert.IsTrue(res);
         }
@@ -64,14 +64,14 @@ namespace Socrata
         [ExpectedException(typeof(Exception))]
         public void ExpectBadResourceError()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Resource resource = socrataClient.GetResource("1234-NOTAREALID");
         }
 
         [Test]
         public void ExpectNotToFindAlias()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Resource resource = socrataClient.GetResourceByAlias("does_not_exist");
             Assert.Null(resource);
         }
@@ -79,7 +79,7 @@ namespace Socrata
         [Test]
         public void ExpectToFindAlias()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Resource resource = socrataClient.GetResourceByAlias("test_fixture");
             long rows = resource.Rows().Count();
             Assert.AreEqual(rows, 0);
@@ -88,7 +88,7 @@ namespace Socrata
         [Test]
         public void GetResourcesForDomain()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             List<DomainResource> resources = socrataClient.GetResources();
             Console.WriteLine(resources.Count);
             Assert.IsTrue(resources.Count > 101);
@@ -97,7 +97,7 @@ namespace Socrata
         [Test]
         public void GetLatestDomainActivityLog()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             List<ActivityLogModel> activities = socrataClient.GetLatestActivityLog();
             Assert.IsTrue(activities.Count > 100);
             ActivityLogFetcher alf = new ActivityLogFetcher(socrataClient.httpClient);
@@ -108,7 +108,7 @@ namespace Socrata
         [Test]
         public void CollocateDatasets()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             SODASchema schema = new SchemaBuilder()
                 .AddColumn(new Column("id", SocrataDataType.TEXT))
                 .Build();
@@ -136,7 +136,7 @@ namespace Socrata
         [Test]
         public void ListSchedulesTest()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             socrataClient.GetSchedules();
         }
 
@@ -144,7 +144,7 @@ namespace Socrata
         [ExpectedException(typeof(HttpRequestException))]
         public void noScheduleResultsInError()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Resource resource = socrataClient.GetResourceByAlias("test_fixture");
             resource.GetSchedule();
         }
@@ -152,7 +152,7 @@ namespace Socrata
         [Test]
         public void getScheduleTest()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Resource resource = socrataClient.GetResourceByAlias("vc4g-8aqx");
             resource.GetSchedule();
         }
@@ -160,7 +160,7 @@ namespace Socrata
         [Test]
         public void DeleteAndCreateScheduleTest()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Resource resource = socrataClient.GetResourceByAlias("edem-28vu");
             Schedule oldSchedule = resource.GetSchedule();
             resource.DeleteSchedule();
@@ -170,7 +170,7 @@ namespace Socrata
         [Test]
         public void updateScheduleTest()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Resource resource = socrataClient.GetResourceByAlias("p6n3-fvan");
             Schedule schedule = resource.GetSchedule();
             schedule.Resource.Action.Parameters.Path = new List<string> { $"Test Path {System.DateTime.Now}" };
@@ -181,7 +181,7 @@ namespace Socrata
         [Test]
         public void ListAgentsTest()
         {
-            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.demo.socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
+            SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             socrataClient.GetAgents();
         }
     }
