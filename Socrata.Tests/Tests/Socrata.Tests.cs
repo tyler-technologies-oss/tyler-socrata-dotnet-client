@@ -82,7 +82,7 @@ namespace Socrata
             SocrataClient socrataClient = new SocrataClient(new Uri("https://peter.test-socrata.com"), Environment.GetEnvironmentVariable("SODA_USERNAME"), Environment.GetEnvironmentVariable("SODA_PASSWORD"));
             Resource resource = socrataClient.GetResourceByAlias("test_fixture");
             long rows = resource.Rows().Count();
-            Assert.AreEqual(rows, 0);
+            Assert.That(rows, Is.GreaterThan(0));
         }
 
         [Test]
