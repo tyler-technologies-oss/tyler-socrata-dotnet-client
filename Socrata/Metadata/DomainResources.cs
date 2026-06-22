@@ -22,7 +22,7 @@ namespace Socrata
         
         public List<DomainResult> Fetch()
         {
-            Uri uri = new Uri(DiscoveryAPI + "?domains=" + this.httpClient.host.Host + "&limit=10000");
+            Uri uri = new Uri(DefaultDiscoveryAPI + "?domains=" + this.httpClient.host.Host + "&limit=10000");
             DomainResults results = httpClient.GetJson<DomainResults>(uri);
             return results.Results;
         }
